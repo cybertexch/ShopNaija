@@ -2,7 +2,7 @@
 // Orders listing and Order Detail logic for ShopNaija Demo
 // Demonstrates VULN-1 (Broken Access Control / IDOR)
 
-import { getSupabase } from './supabaseClient.js';
+import { getSupabase, isSupabaseConfigured } from './supabaseClient.js';
 import { requireAuth, initHeaderAuth } from './auth.js';
 
 // Fallback demo orders for offline/local preview if Supabase is disconnected
@@ -54,43 +54,44 @@ export async function loadMyOrders() {
   `;
 
   let orders = [];
-  const supabase = getSupabase();
 
-  if (supabase) {
-    try {
-      // Query user's own orders
-      const { data, error } = await supabase
-        .from('orders')
-        .select(`
-          id,
-          user_id,
-          quantity,
-          total,
-          delivery_name,
-          status,
-          created_at,
-          products (
+  if (isSupabaseConfigured()) {
+    const supabase = getSupabase();
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('orders')
+          .select(`
             id,
-            name,
-            price,
-            image_url
-          )
-        `)
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
+            user_id,
+            quantity,
+            total,
+            delivery_name,
+            status,
+            created_at,
+            products (
+              id,
+              name,
+              price,
+              image_url
+            )
+          `)
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
 
-      if (!error && data && data.length > 0) {
-        orders = data;
-      } else {
-        // Fallback for demonstration when using offline preview
-        orders = FALLBACK_ORDERS.filter(o => o.user_id === user.id || o.user_id === 'c0000000-0000-0000-0000-000000000001');
+        if (!error && data && data.length > 0) {
+          orders = data;
+        } else {
+          orders = FALLBACK_ORDERS.filter(o => o.user_id === user.id || o.user_id === 'c0000000-0000-0000-0000-000000000001');
+        }
+      } catch (e) {
+        console.warn('Supabase query failed, falling back:', e);
+        orders = FALLBACK_ORDERS;
       }
-    } catch (e) {
-      console.warn('Supabase query failed, falling back:', e);
-      orders = FALLBACK_ORDERS;
     }
   } else {
-    orders = FALLBACK_ORDERS;
+    // Instant demo fallback (0ms)
+    orders = FALLBACK_ORDERS.filter(o => o.user_id === user.id || o.user_id === 'c0000000-0000-0000-0000-000000000001');
   }
 
   renderOrdersTable(orders, container);
@@ -168,49 +169,50 @@ export async function loadOrderDetail() {
   let order = null;
   let fetchError = null;
 
-  if (supabase) {
-    try {
-      // ============================================================================
-      // // VULN-1: BROKEN ACCESS CONTROL (IDOR)
-      // The frontend directly requests the order by UUID without checking ownership.
-      // Under vulnerable RLS (vulnerable.sql), the server allows ANY authenticated
-      // user to read this order, exposing Customer B's delivery details to Customer A!
-      // Under fixed RLS (fixed.sql), Supabase returns an error or empty result.
-      // ============================================================================
-      const { data, error } = await supabase
-        .from('orders')
-        .select(`
-          id,
-          user_id,
-          quantity,
-          total,
-          delivery_name,
-          delivery_address,
-          delivery_phone,
-          status,
-          created_at,
-          products (
+  if (isSupabaseConfigured()) {
+    const supabase = getSupabase();
+    if (supabase) {
+      try {
+        // ============================================================================
+        // // VULN-1: BROKEN ACCESS CONTROL (IDOR)
+        // The frontend directly requests the order by UUID without checking ownership.
+        // Under vulnerable RLS (vulnerable.sql), the server allows ANY authenticated
+        // user to read this order, exposing Customer B's delivery details to Customer A!
+        // Under fixed RLS (fixed.sql), Supabase returns an error or empty result.
+        // ============================================================================
+        const { data, error } = await supabase
+          .from('orders')
+          .select(`
             id,
-            name,
-            price,
-            image_url
-          )
-        `)
-        .eq('id', orderId)
-        .single();
+            user_id,
+            quantity,
+            total,
+            delivery_name,
+            delivery_address,
+            delivery_phone,
+            status,
+            created_at,
+            products (
+              id,
+              name,
+              price,
+              image_url
+            )
+          `)
+          .eq('id', orderId)
+          .single();
 
-      if (error) {
-        fetchError = error;
-      } else {
-        order = data;
+        if (error) {
+          fetchError = error;
+        } else {
+          order = data;
+        }
+      } catch (e) {
+        fetchError = e;
       }
-    } catch (e) {
-      fetchError = e;
     }
-  }
-
-  // Fallback demo mock for offline testing
-  if (!order && !fetchError) {
+  } else {
+    // Instant fallback demo mock (0ms)
     order = FALLBACK_ORDERS.find(o => o.id === orderId) || FALLBACK_ORDERS[0];
   }
 

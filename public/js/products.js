@@ -1,7 +1,7 @@
 // public/js/products.js
 // Products listing logic for ShopNaija Demo
 
-import { getSupabase } from './supabaseClient.js';
+import { getSupabase, isSupabaseConfigured } from './supabaseClient.js';
 import { initHeaderAuth } from './auth.js';
 
 // Fallback demo products in case database is offline / not yet seeded
@@ -21,42 +21,33 @@ const FALLBACK_PRODUCTS = [
 ];
 
 export async function loadProducts() {
-  await initHeaderAuth();
   const grid = document.getElementById('products-grid');
   if (!grid) return;
 
-  grid.innerHTML = `
-    <div class="state-box" style="grid-column: 1 / -1;">
-      <div class="state-spinner"></div>
-      <p>Loading genuine Nigerian heritage products...</p>
-    </div>
-  `;
+  // 1. Instant 0ms optimistic render (no spinner, no wait, instant display!)
+  renderProducts(FALLBACK_PRODUCTS, grid);
 
-  let products = [];
-  const supabase = getSupabase();
+  // 2. Initialize header auth in parallel without blocking product cards
+  initHeaderAuth();
 
-  if (supabase) {
+  // 3. Only query remote Supabase if a real project is configured
+  if (isSupabaseConfigured()) {
     try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('price', { ascending: false });
+      const supabase = getSupabase();
+      if (supabase) {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .order('price', { ascending: false });
 
-      if (!error && data && data.length > 0) {
-        products = data;
-      } else {
-        console.info('Using fallback product catalog (database empty or connecting)');
-        products = FALLBACK_PRODUCTS;
+        if (!error && data && data.length > 0) {
+          renderProducts(data, grid);
+        }
       }
     } catch (e) {
-      console.warn('Could not reach Supabase products table, using demo fallback:', e);
-      products = FALLBACK_PRODUCTS;
+      console.info('Using local fast catalog:', e.message);
     }
-  } else {
-    products = FALLBACK_PRODUCTS;
   }
-
-  renderProducts(products, grid);
 }
 
 function renderProducts(products, container) {
