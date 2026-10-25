@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order Details - ShopNaija Demo</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Supabase JS Client via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Mandatory Fixed Educational Demo Banner -->
+  <aside class="demo-banner" aria-label="Demo notice">
+    <span class="demo-banner-badge">TRAINING LAB</span>
+    <span>DEMO APP - FAKE DATA ONLY</span>
+  </aside>
+
+  <!-- Navigation Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand-link">
+        <span class="flag-dot"></span>
+        <span>ShopNaija</span>
+        <span class="brand-tag">Demo Store</span>
+      </a>
+
+      <nav aria-label="Primary navigation">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Products</a></li>
+          <li><a href="orders.html" class="nav-link active">My Orders</a></li>
+          <li><a href="admin.html" class="nav-link">Admin Dashboard</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-auth" id="nav-auth-container">
+        <!-- Injected by auth.js -->
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="page-header" style="text-align: center;">
+      <h1 class="page-title">Order Dispatch & Delivery Summary</h1>
+      <p class="page-subtitle">Review items, recipient contact details, and fulfillment timeline.</p>
+    </div>
+
+    <!-- Order Detail Card (Populated by orders.js) -->
+    <div class="order-detail-card" id="order-detail-container">
+      <!-- Injected by loadOrderDetail() -->
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>ShopNaija Cybersecurity Educational Demo &copy; 2026. Built strictly for defensive security training.</p>
+  </footer>
+
+  <script type="module">
+    import { loadOrderDetail } from './js/orders.js';
+    document.addEventListener('DOMContentLoaded', loadOrderDetail);
+  </script>
+</body>
+</html>

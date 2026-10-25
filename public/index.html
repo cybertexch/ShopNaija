@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopNaija - Nigerian Heritage Showcase (Demo App)</title>
+  <meta name="description" content="ShopNaija deliberate cybersecurity demonstration application. Defensive educational lab for TikTok LIVE.">
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Supabase JS Client via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Mandatory Fixed Educational Demo Banner -->
+  <aside class="demo-banner" aria-label="Demo notice">
+    <span class="demo-banner-badge">TRAINING LAB</span>
+    <span>DEMO APP - FAKE DATA ONLY</span>
+  </aside>
+
+  <!-- Navigation Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand-link" id="brand-logo">
+        <span class="flag-dot"></span>
+        <span>ShopNaija</span>
+        <span class="brand-tag">Demo Store</span>
+      </a>
+
+      <nav aria-label="Primary navigation">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link active" id="nav-products">Products</a></li>
+          <li><a href="orders.html" class="nav-link" id="nav-orders">My Orders</a></li>
+          <li><a href="admin.html" class="nav-link" id="nav-admin">Admin Dashboard</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-auth" id="nav-auth-container">
+        <!-- Injected dynamically by auth.js -->
+        <a href="login.html" class="btn btn-primary btn-sm">Log In</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="page-header">
+      <h1 class="page-title">Curated Nigerian Heritage Collection</h1>
+      <p class="page-subtitle">Authentic textiles, artisan carvings, gourmet flavors, and leather crafts delivered nationwide.</p>
+    </div>
+
+    <!-- Educational Callout for TikTok LIVE Attendees -->
+    <div class="vuln-callout">
+      <strong>ℹ️ Cybersecurity Training Notice:</strong>
+      This e-commerce application is a controlled educational demonstration. All users, prices, tracking numbers, and addresses are fictitious.
+    </div>
+
+    <!-- Product Grid (12 Items) -->
+    <section class="products-grid" id="products-grid" aria-label="Product list">
+      <!-- Injected dynamically by products.js -->
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>ShopNaija Cybersecurity Educational Demo &copy; 2026. Built strictly for defensive security training.</p>
+  </footer>
+
+  <script type="module" src="js/products.js"></script>
+</body>
+</html>

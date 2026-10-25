@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In / Sign Up - ShopNaija Demo</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Supabase JS Client via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Mandatory Fixed Educational Demo Banner -->
+  <aside class="demo-banner" aria-label="Demo notice">
+    <span class="demo-banner-badge">TRAINING LAB</span>
+    <span>DEMO APP - FAKE DATA ONLY</span>
+  </aside>
+
+  <!-- Navigation Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand-link">
+        <span class="flag-dot"></span>
+        <span>ShopNaija</span>
+        <span class="brand-tag">Demo Store</span>
+      </a>
+
+      <nav aria-label="Primary navigation">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Products</a></li>
+          <li><a href="orders.html" class="nav-link">My Orders</a></li>
+          <li><a href="admin.html" class="nav-link">Admin Dashboard</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-auth" id="nav-auth-container">
+        <a href="login.html" class="btn btn-primary btn-sm">Log In</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="auth-card">
+      <div style="text-align: center; margin-bottom: 1.5rem;">
+        <h1 class="page-title" style="font-size: 1.6rem;" id="auth-title">Customer Login</h1>
+        <p class="page-subtitle" id="auth-subtitle">Sign in to manage and view your orders</p>
+      </div>
+
+      <div id="auth-alert" class="alert"></div>
+
+      <form id="auth-form">
+        <div class="form-group" id="fullname-group" style="display: none;">
+          <label class="form-label" for="full_name">Full Name</label>
+          <input type="text" id="full_name" class="form-input" placeholder="e.g. Babatunde Adebayo" autocomplete="name">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input type="email" id="email" class="form-input" placeholder="customer@shopnaija.demo" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input type="password" id="password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+          <p class="form-hint">Default demo password for seeded accounts: <code>password123</code></p>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block" id="submit-btn">
+          Sign In
+        </button>
+      </form>
+
+      <div style="text-align: center; margin-top: 1rem;">
+        <button type="button" id="toggle-mode-btn" class="btn btn-outline btn-sm btn-block">
+          Need an account? Switch to Sign Up
+        </button>
+      </div>
+
+      <!-- Quick Fill Buttons for TikTok LIVE Demo Speakers -->
+      <div class="demo-creds-box">
+        <div class="demo-creds-title">⚡ Quick Demo Test Accounts:</div>
+        <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 6px;">
+          Click to autofill seeded credentials:
+        </p>
+        <div class="creds-btn-group">
+          <button type="button" class="cred-chip" data-email="chidi@shopnaija.demo" data-pwd="password123" data-name="Chidi Okafor (Fake)">
+            Customer 1 (Chidi)
+          </button>
+          <button type="button" class="cred-chip" data-email="amina@shopnaija.demo" data-pwd="password123" data-name="Amina Bello (Fake)">
+            Customer 2 (Amina - IDOR Target)
+          </button>
+          <button type="button" class="cred-chip" data-email="admin@shopnaija.demo" data-pwd="password123" data-name="Captain Admin (Demo)">
+            Admin (Captain Admin)
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>ShopNaija Cybersecurity Educational Demo &copy; 2026. Built strictly for defensive security training.</p>
+  </footer>
+
+  <script type="module">
+    import { login, signup, initHeaderAuth } from './js/auth.js';
+
+    let isSignUp = false;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      await initHeaderAuth();
+
+      const form = document.getElementById('auth-form');
+      const toggleBtn = document.getElementById('toggle-mode-btn');
+      const title = document.getElementById('auth-title');
+      const subtitle = document.getElementById('auth-subtitle');
+      const submitBtn = document.getElementById('submit-btn');
+      const fullnameGroup = document.getElementById('fullname-group');
+      const alertBox = document.getElementById('auth-alert');
+
+      // Autofill chips
+      document.querySelectorAll('.cred-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          document.getElementById('email').value = chip.dataset.email;
+          document.getElementById('password').value = chip.dataset.pwd;
+          if (chip.dataset.name) {
+            document.getElementById('full_name').value = chip.dataset.name;
+          }
+        });
+      });
+
+      toggleBtn.addEventListener('click', () => {
+        isSignUp = !isSignUp;
+        if (isSignUp) {
+          title.textContent = 'Create Customer Account';
+          subtitle.textContent = 'Sign up for demo ordering';
+          submitBtn.textContent = 'Sign Up';
+          toggleBtn.textContent = 'Already have an account? Switch to Log In';
+          fullnameGroup.style.display = 'block';
+        } else {
+          title.textContent = 'Customer Login';
+          subtitle.textContent = 'Sign in to manage and view your orders';
+          submitBtn.textContent = 'Sign In';
+          toggleBtn.textContent = 'Need an account? Switch to Sign Up';
+          fullnameGroup.style.display = 'none';
+        }
+      });
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        alertBox.className = 'alert';
+        alertBox.style.display = 'none';
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const fullName = document.getElementById('full_name').value.trim();
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Authenticating...';
+
+        try {
+          if (isSignUp) {
+            const { data, error } = await signup(email, password, fullName);
+            if (error) throw error;
+            alertBox.className = 'alert alert-success';
+            alertBox.textContent = 'Registration successful! Signing you in...';
+            setTimeout(() => { window.location.href = 'orders.html'; }, 1000);
+          } else {
+            const { data, error } = await login(email, password);
+            if (error) throw error;
+            alertBox.className = 'alert alert-success';
+            alertBox.textContent = 'Signed in successfully! Redirecting...';
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirect = urlParams.get('redirect') || 'orders.html';
+            setTimeout(() => { window.location.href = redirect; }, 800);
+          }
+        } catch (err) {
+          alertBox.className = 'alert alert-danger';
+          alertBox.textContent = err.message || 'Authentication failed. Please verify credentials.';
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = isSignUp ? 'Sign Up' : 'Sign In';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - ShopNaija Demo</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Supabase JS Client via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- Mandatory Fixed Educational Demo Banner -->
+  <aside class="demo-banner" aria-label="Demo notice">
+    <span class="demo-banner-badge">TRAINING LAB</span>
+    <span>DEMO APP - FAKE DATA ONLY</span>
+  </aside>
+
+  <!-- Navigation Header -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand-link">
+        <span class="flag-dot"></span>
+        <span>ShopNaija</span>
+        <span class="brand-tag">Demo Store</span>
+      </a>
+
+      <nav aria-label="Primary navigation">
+        <ul class="nav-links">
+          <li><a href="index.html" class="nav-link">Products</a></li>
+          <li><a href="orders.html" class="nav-link">My Orders</a></li>
+          <li><a href="admin.html" class="nav-link active">Admin Dashboard</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-auth" id="nav-auth-container">
+        <!-- Injected by auth.js -->
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-start; flex-direction:row; flex-wrap:wrap;">
+      <div>
+        <h1 class="page-title">Store Administration & Fulfillment</h1>
+        <p class="page-subtitle">Master overview of all customer purchases across Nigeria.</p>
+      </div>
+      <div>
+        <span class="status-badge" style="background:#0f172a; color:#fff;" id="admin-orders-count">
+          Loading...
+        </span>
+      </div>
+    </div>
+
+    <!-- Educational Callout & Live Status Banner -->
+    <div id="admin-status-banner"></div>
+
+    <div class="vuln-callout">
+      <strong>🔍 Defensive Lab Demonstration (VULN-3 Unprotected Admin Endpoint):</strong>
+      This dashboard retrieves data by querying the serverless function at <code>/api/admin/orders</code>. 
+      <br>In the <strong>vulnerable version</strong>, you can open a new private browser window (incognito) or curl the URL directly without any authorization cookies/tokens, and it will still dump the entire customer order list!
+    </div>
+
+    <div class="table-responsive">
+      <table class="data-table" aria-label="All Orders Administration Table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Phone</th>
+            <th>Delivery Address</th>
+            <th>Product</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="admin-orders-tbody">
+          <!-- Injected by admin.js -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>ShopNaija Cybersecurity Educational Demo &copy; 2026. Built strictly for defensive security training.</p>
+  </footer>
+
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>
