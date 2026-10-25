@@ -39,6 +39,25 @@ alter table public.profiles enable row level security;
 alter table public.products enable row level security;
 alter table public.orders enable row level security;
 
+-- 4b. Secure Orders Policy (FIX-1)
+-- Users can only read their own orders unless they hold the admin role
+drop policy if exists "orders_select_policy" on public.orders;
+create policy "orders_select_policy"
+  on public.orders for select
+  using (
+    auth.uid() = user_id
+    or exists (
+      select 1 from public.profiles
+      where profiles.id = auth.uid()
+      and profiles.role = 'admin'
+    )
+  );
+
+drop policy if exists "orders_insert_policy" on public.orders;
+create policy "orders_insert_policy"
+  on public.orders for insert
+  with check (auth.uid() = user_id);
+
 -- 5. Standard Public Policies for Products
 drop policy if exists "Anyone can read products" on public.products;
 create policy "Anyone can read products"
