@@ -662,19 +662,216 @@ a:hover {
   color: var(--color-text-muted);
 }
 
-/* Responsive Breakpoints */
+/* Responsive Breakpoints & Mobile Optimization */
 @media (max-width: 768px) {
+  :root {
+    --banner-height: 36px;
+  }
+
+  body {
+    padding-top: var(--banner-height);
+    padding-bottom: 70px; /* Space for mobile sticky bottom navigation */
+  }
+
+  .demo-banner {
+    font-size: 11px;
+    padding: 0 0.5rem;
+    gap: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .demo-banner-badge {
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+
+  /* Header adjustments */
+  .site-header {
+    padding: 0;
+  }
+
   .header-container {
-    flex-wrap: wrap;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
-  .nav-links {
-    order: 3;
-    width: 100%;
-    justify-content: space-around;
-    padding-top: 0.5rem;
+
+  .brand-link {
+    font-size: 1.2rem;
+  }
+
+  /* Transform top nav into sleek mobile bottom bar */
+  .site-header nav {
+    display: none; /* Hidden from top on mobile */
+  }
+
+  .mobile-bottom-nav {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #ffffff;
     border-top: 1px solid var(--color-border);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06);
+    z-index: 999;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 0.5rem;
   }
+
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    flex: 1;
+    height: 100%;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.15s ease;
+    touch-action: manipulation;
+  }
+
+  .mobile-nav-item svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .mobile-nav-item.active, .mobile-nav-item:hover {
+    color: var(--color-primary);
+  }
+
+  .mobile-nav-item.active svg {
+    stroke: var(--color-primary);
+  }
+
+  /* Main content padding on mobile */
+  .main-content {
+    padding: 1.25rem 1rem 2.5rem;
+  }
+
+  .page-header {
+    margin-bottom: 1.25rem;
+  }
+
+  .page-title {
+    font-size: 1.45rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.9rem;
+  }
+
+  /* Products Grid on mobile */
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.85rem;
+  }
+
+  .product-image-wrap {
+    height: 140px;
+  }
+
+  .product-details {
+    padding: 0.85rem;
+  }
+
+  .product-name {
+    font-size: 0.95rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .product-price {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Buttons & touch targets */
+  .btn {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .btn-sm {
+    min-height: 40px;
+  }
+
+  /* Input fields: 16px to prevent iOS Safari auto-zoom */
+  .form-input {
+    font-size: 16px !important;
+    min-height: 46px;
+  }
+
+  .auth-card {
+    margin: 1rem auto;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .cred-chip {
+    padding: 6px 10px;
+    font-size: 0.82rem;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* Order details on mobile */
+  .order-detail-card {
+    padding: 1.25rem;
+  }
+
   .order-detail-header {
     flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .detail-grid {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  /* Table swipe indicator */
+  .table-responsive {
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-md);
+  }
+
+  .table-responsive::after {
+    content: '👉 Swipe table horizontally to see all columns';
+    display: block;
+    background: #f8fafc;
+    color: var(--color-text-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-align: center;
+    padding: 6px;
+    border-top: 1px dashed var(--color-border);
   }
 }
+
+/* Extra small mobile screens (iPhone SE, 360px Android) */
+@media (max-width: 380px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-link {
+    font-size: 1.1rem;
+  }
+
+  .brand-tag {
+    display: none;
+  }
+}
+
