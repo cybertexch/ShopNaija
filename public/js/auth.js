@@ -1,9 +1,22 @@
 // public/js/auth.js
 // Authentication management & Header State for ShopNaija Demo
 
-import { getSupabase } from './supabaseClient.js';
+import { getSupabase, isSupabaseConfigured } from './supabaseClient.js';
 
 export async function getCurrentUser() {
+  // Check local demo session first (instant 0ms resolution)
+  const localSession = localStorage.getItem('SHOPNAIJA_DEMO_SESSION');
+  if (localSession) {
+    try {
+      return JSON.parse(localSession);
+    } catch (_) {}
+  }
+
+  // If Supabase credentials are not configured yet, do not hang on network timeouts
+  if (!isSupabaseConfigured()) {
+    return null;
+  }
+
   const supabase = getSupabase();
   if (!supabase) return null;
 
@@ -44,8 +57,11 @@ export async function initHeaderAuth() {
         <button id="logout-btn" class="btn btn-outline btn-sm">Log out</button>
       `;
       document.getElementById('logout-btn')?.addEventListener('click', async () => {
-        const supabase = getSupabase();
-        await supabase.auth.signOut();
+        localStorage.removeItem('SHOPNAIJA_DEMO_SESSION');
+        if (isSupabaseConfigured()) {
+          const supabase = getSupabase();
+          await supabase?.auth.signOut();
+        }
         window.location.href = 'login.html';
       });
     } else {
@@ -103,8 +119,34 @@ export async function requireAuth() {
 }
 
 export async function login(email, password) {
-  const supabase = getSupabase();
-  return await supabase.auth.signInWithPassword({ email, password });
+  if (isSupabaseConfigured()) {
+    const supabase = getSupabase();
+    return await supabase.auth.signInWithPassword({ email, password });
+  }
+
+  // Pre-configured demo user accounts for instant rehearsals without backend latency
+  const DEMO_USERS = {
+    'admin@shopnaija.demo': { id: 'a0000000-0000-0000-0000-000000000001', fullName: 'Captain Admin (Demo)', role: 'admin' },
+    'chidi@shopnaija.demo': { id: 'c0000000-0000-0000-0000-000000000001', fullName: 'Chidi Okafor (Fake)', role: 'customer' },
+    'amina@shopnaija.demo': { id: 'c0000000-0000-0000-0000-000000000002', fullName: 'Amina Bello (Fake)', role: 'customer' }
+  };
+
+  const userMeta = DEMO_USERS[email.toLowerCase()] || {
+    id: 'c0000000-0000-0000-0000-000000000001',
+    fullName: email.split('@')[0],
+    role: email.toLowerCase().includes('admin') ? 'admin' : 'customer'
+  };
+
+  const sessionObj = {
+    id: userMeta.id,
+    email: email,
+    fullName: userMeta.fullName,
+    role: userMeta.role,
+    token: 'demo-local-jwt-token'
+  };
+
+  localStorage.setItem('SHOPNAIJA_DEMO_SESSION', JSON.stringify(sessionObj));
+  return { data: { user: sessionObj }, error: null };
 }
 
 export async function signup(email, password, fullName) {

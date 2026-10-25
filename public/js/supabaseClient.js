@@ -17,6 +17,18 @@ const DEFAULT_SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || localStorage.getIt
 // Initialize Supabase Client via CDN library (window.supabase)
 let supabaseClient = null;
 
+export function isSupabaseConfigured() {
+  const url = localStorage.getItem('SHOPNAIJA_SUPABASE_URL') || window.SUPABASE_URL;
+  const key = localStorage.getItem('SHOPNAIJA_SUPABASE_ANON_KEY') || window.SUPABASE_ANON_KEY;
+  return Boolean(
+    url && 
+    key && 
+    !url.includes('demo-shopnaija-project') && 
+    !url.includes('your-project') &&
+    url.startsWith('https://')
+  );
+}
+
 export function getSupabase() {
   if (!supabaseClient) {
     if (typeof window.supabase === 'undefined') {
