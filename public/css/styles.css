@@ -662,6 +662,18 @@ a:hover {
   color: var(--color-text-muted);
 }
 
+/* Mobile Bottom Nav - Hidden on Desktop */
+.mobile-bottom-nav {
+  display: none;
+}
+
+.mobile-nav-item svg {
+  width: 20px;
+  height: 20px;
+  max-width: 24px;
+  max-height: 24px;
+}
+
 /* Responsive Breakpoints & Mobile Optimization */
 @media (max-width: 768px) {
   :root {

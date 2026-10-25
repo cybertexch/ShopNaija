@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="asoBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064e3b"/>
+      <stop offset="100%" stop-color="#022c22"/>
+    </linearGradient>
+    <linearGradient id="goldAcc" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <pattern id="asoStripe" width="24" height="24" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="0" x2="24" y2="24" stroke="#10b981" stroke-width="2" opacity="0.3"/>
+      <line x1="24" y1="0" x2="0" y2="24" stroke="#fbbf24" stroke-width="1.5" opacity="0.4"/>
+    </pattern>
+    <filter id="glow">
+      <feDropShadow dx="0" dy="10" stdDeviation="15" flood-color="#000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+  <rect width="600" height="450" fill="url(#asoBg)"/>
+  <rect width="600" height="450" fill="url(#asoStripe)"/>
+  
+  <!-- Agbada Robe Silhouette -->
+  <g filter="url(#glow)">
+    <!-- Wings / Sleeves -->
+    <path d="M120 180 L300 130 L480 180 L440 370 L300 380 L160 370 Z" fill="#047857" stroke="url(#goldAcc)" stroke-width="4"/>
+    <!-- Folded Chest Panel -->
+    <path d="M230 145 L300 240 L370 145 L350 375 L250 375 Z" fill="#065f46" stroke="#fbbf24" stroke-width="2"/>
+    <!-- Gold Embroidered Neckline (Yoruba Royal Embroidery) -->
+    <circle cx="300" cy="180" r="45" fill="none" stroke="url(#goldAcc)" stroke-width="6" stroke-dasharray="8 4"/>
+    <path d="M300 225 L300 330" stroke="url(#goldAcc)" stroke-width="5" stroke-linecap="round"/>
+    <!-- Intricate Floral Motif on Chest -->
+    <circle cx="300" cy="275" r="18" fill="url(#goldAcc)"/>
+    <circle cx="300" cy="275" r="10" fill="#064e3b"/>
+  </g>
+  <rect x="190" y="395" width="220" height="30" rx="15" fill="rgba(0,0,0,0.6)" stroke="#10b981" stroke-width="1.5"/>
+  <text x="300" y="415" font-family="'Rubik', sans-serif" font-size="12" font-weight="700" fill="#a7f3d0" text-anchor="middle" letter-spacing="1.5">ROYAL ASO-OKE AGBADA</text>
+</svg>

@@ -17,7 +17,7 @@ const FALLBACK_ORDERS = [
     delivery_phone: '+234 800 000 0001',
     status: 'Processing',
     created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
-    products: { name: 'Handwoven Aso-Oke Agbada Set', price: 45000, image_url: 'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=600&q=80' }
+    products: { name: 'Handwoven Aso-Oke Agbada Set', price: 45000, image_url: 'images/products/aso-oke.svg' }
   },
   {
     id: 'd0000000-0000-0000-0000-000000000005',
@@ -29,7 +29,7 @@ const FALLBACK_ORDERS = [
     delivery_phone: '+234 800 111 2222',
     status: 'Shipped',
     created_at: new Date(Date.now() - 86400000 * 1).toISOString(),
-    products: { name: 'Beaded Coral Choker Necklace', price: 24000, image_url: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80' }
+    products: { name: 'Beaded Coral Choker Necklace', price: 24000, image_url: 'images/products/coral-necklace.svg' }
   }
 ];
 
@@ -238,7 +238,7 @@ function renderOrderDetail(order, currentUser, container) {
   const isIdorExposed = !isOwner && currentUser.role !== 'admin';
   const productName = order.products?.name || 'Nigerian Heritage Product';
   const productPrice = order.products?.price || order.total;
-  const productImage = order.products?.image_url || 'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=600&q=80';
+  const productImage = order.products?.image_url || 'images/products/aso-oke.svg';
   const formattedDate = new Date(order.created_at).toLocaleString('en-NG', {
     dateStyle: 'medium',
     timeStyle: 'short'

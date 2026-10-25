@@ -48,18 +48,18 @@ end $$;
 
 -- 2. Seed 12 Fake Nigerian-Themed Products
 insert into public.products (id, name, price, image_url) values
-  ('b0000000-0000-0000-0000-000000000001', 'Handwoven Aso-Oke Agbada Set', 45000, 'https://images.unsplash.com/photo-1590736969955-71cc94801759?auto=format&fit=crop&w=600&q=80'),
-  ('b0000000-0000-0000-0000-000000000002', 'Benin Bronze Replica Mask', 18500, 'https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?auto=format&fit=crop&w=600&q=80'),
-  ('b0000000-0000-0000-0000-000000000003', 'Organic Adire Indigo Silk Scarf', 12000, 'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?auto=format&fit=crop&w=600&q=80'),
-  ('b0000000-0000-0000-0000-000000000004', 'Jos Plateau Arabica Coffee (500g)', 8500, 'https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=600&q=80'),
-  ('b0000000-0000-0000-0000-000000000005', 'Calabar Chili Crisp Oil (250ml)', 4200, 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?auto=format&fit=crop&w=600&q=80'),
-  ('b0000000-0000-0000-0000-000000000006', 'Handcrafted Kano Leather Slippers', 32000, 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80'),
-  ('b0000000-0000-0000-0000-000000000007', 'Gourmet Smokey Jollof Spice Jar', 3500, 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=600&q=80'),
-  ('b0000000-0000-0000-0000-000000000008', 'Pure Nilotica Shea Butter Cream', 6000, 'https://images.unsplash.com/photo-1608248597359-0d321591f822?auto=format&fit=crop&w=600&q=80'),
-  ('b0000000-0000-0000-0000-000000000009', 'Ankara Print Laptop Sleeve 15"', 9500, 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=600&q=80'),
-  ('b0000000-0000-0000-0000-000000000010', 'Beaded Coral Choker Necklace', 24000, 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80'),
-  ('b0000000-0000-0000-0000-000000000011', 'Smoked Dried Catfish Fillet Pack', 15000, 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&q=80'),
-  ('b0000000-0000-0000-0000-000000000012', 'Hand-Carved Talking Drum (Gangan)', 28000, 'https://images.unsplash.com/photo-1511192336575-5a79af67a629?auto=format&fit=crop&w=600&q=80')
+  ('b0000000-0000-0000-0000-000000000001', 'Handwoven Aso-Oke Agbada Set', 45000, 'images/products/aso-oke.svg'),
+  ('b0000000-0000-0000-0000-000000000002', 'Benin Bronze Replica Mask', 18500, 'images/products/benin-mask.svg'),
+  ('b0000000-0000-0000-0000-000000000003', 'Organic Adire Indigo Silk Scarf', 12000, 'images/products/adire-scarf.svg'),
+  ('b0000000-0000-0000-0000-000000000004', 'Jos Plateau Arabica Coffee (500g)', 8500, 'images/products/jos-coffee.svg'),
+  ('b0000000-0000-0000-0000-000000000005', 'Calabar Chili Crisp Oil (250ml)', 4200, 'images/products/calabar-chili.svg'),
+  ('b0000000-0000-0000-0000-000000000006', 'Handcrafted Kano Leather Slippers', 32000, 'images/products/kano-leather.svg'),
+  ('b0000000-0000-0000-0000-000000000007', 'Gourmet Smokey Jollof Spice Jar', 3500, 'images/products/jollof-spice.svg'),
+  ('b0000000-0000-0000-0000-000000000008', 'Pure Nilotica Shea Butter Cream', 6000, 'images/products/shea-butter.svg'),
+  ('b0000000-0000-0000-0000-000000000009', 'Ankara Print Laptop Sleeve 15"', 9500, 'images/products/ankara-sleeve.svg'),
+  ('b0000000-0000-0000-0000-000000000010', 'Beaded Coral Choker Necklace', 24000, 'images/products/coral-necklace.svg'),
+  ('b0000000-0000-0000-0000-000000000011', 'Smoked Dried Catfish Fillet Pack', 15000, 'images/products/smoked-catfish.svg'),
+  ('b0000000-0000-0000-0000-000000000012', 'Hand-Carved Talking Drum (Gangan)', 28000, 'images/products/talking-drum.svg')
 on conflict (id) do nothing;
 
 -- 3. Seed 20 Fake Orders Across Customers

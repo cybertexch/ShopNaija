@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="fishBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c1917"/>
+      <stop offset="100%" stop-color="#0c0a09"/>
+    </linearGradient>
+    <linearGradient id="smokeFish" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#78350f"/>
+      <stop offset="50%" stop-color="#451a03"/>
+      <stop offset="100%" stop-color="#1c1917"/>
+    </linearGradient>
+    <filter id="packShadow">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+  <rect width="600" height="450" fill="url(#fishBg)"/>
+
+  <!-- Vacuum Sealed Pack with Oven Dried Catfish -->
+  <g filter="url(#packShadow)">
+    <rect x="200" y="130" width="200" height="210" rx="12" fill="#292524" stroke="#78350f" stroke-width="2"/>
+    <!-- Catfish Shape (Curled Oven Dried Traditional) -->
+    <path d="M250 240 C230 180 320 160 350 200 C370 240 330 300 270 290 C240 280 260 250 280 250" fill="url(#smokeFish)" stroke="#b45309" stroke-width="3"/>
+    <circle cx="260" cy="210" r="4" fill="#fbbf24"/>
+    <!-- Fin accents -->
+    <path d="M340 180 Q360 170 355 195" fill="#78350f"/>
+    <!-- Sealed Label -->
+    <rect x="230" y="270" width="140" height="50" rx="6" fill="#14532d" stroke="#86efac" stroke-width="1"/>
+    <text x="300" y="290" font-family="'Rubik', sans-serif" font-size="9" font-weight="800" fill="#f0fdf4" text-anchor="middle">OVEN-DRIED CATFISH</text>
+    <text x="300" y="306" font-family="'Nunito Sans', sans-serif" font-size="8" font-weight="700" fill="#bbf7d0" text-anchor="middle">SAND-FREE • VACUUM SEALED</text>
+  </g>
+  <rect x="180" y="395" width="240" height="30" rx="15" fill="rgba(0,0,0,0.6)" stroke="#b45309" stroke-width="1.5"/>
+  <text x="300" y="415" font-family="'Rubik', sans-serif" font-size="12" font-weight="700" fill="#fde68a" text-anchor="middle" letter-spacing="1.5">SMOKED DRIED CATFISH</text>
+</svg>
