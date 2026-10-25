@@ -7,20 +7,12 @@ const DEFAULT_SUPABASE_URL = window.SUPABASE_URL || localStorage.getItem('SHOPNA
 const DEFAULT_SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || localStorage.getItem('SHOPNAIJA_SUPABASE_ANON_KEY') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.demo-anon-key-placeholder';
 
 // ============================================================================
-// // VULN-2: EXPOSED SECRET IN FRONTEND CODE
-// Flaw: A secret third-party API key is hardcoded directly into client-side JS.
-// Anyone can view this key in browser DevTools (Sources / Network / Console).
-// NOTE: This is a FAKE demo key for defensive training only. Never use real keys.
+// // FIX-2: REMOVE EXPOSED SECRET FROM FRONTEND
+// Remediated: The private API key (sk_demo_not_real_123) has been removed from
+// client-side code and moved to Vercel environment variables (process.env.DEMO_THIRD_PARTY_KEY).
+// Frontend code only contains the public Supabase anon key.
 // ============================================================================
-const DEMO_THIRD_PARTY_KEY = 'sk_demo_not_real_123'; // VULN-2: Exposed secret key in frontend bundle!
 
-// Log to console on init so speakers can demonstrate finding it in DevTools Console or Sources
-console.warn(
-  '%c[ShopNaija Security Demo - VULN-2]%c Secret key exposed in client:',
-  'background: #ea580c; color: #fff; font-weight: bold; padding: 2px 6px; border-radius: 4px;',
-  'color: #ea580c; font-weight: bold;',
-  DEMO_THIRD_PARTY_KEY
-);
 
 // Initialize Supabase Client via CDN library (window.supabase)
 let supabaseClient = null;
@@ -36,10 +28,6 @@ export function getSupabase() {
     supabaseClient = window.supabase.createClient(url, anonKey);
   }
   return supabaseClient;
-}
-
-export function getDemoThirdPartyKey() {
-  return DEMO_THIRD_PARTY_KEY; // VULN-2
 }
 
 export function updateSupabaseConfig(url, key) {
