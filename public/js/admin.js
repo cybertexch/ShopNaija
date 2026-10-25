@@ -97,19 +97,72 @@ export async function initAdminPage() {
 
     renderAdminOrders(orders, tbody);
   } catch (err) {
-    console.error('Admin API fetch failed:', err);
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="7" class="state-box">
-          <p class="alert alert-danger" style="display:block;">Could not connect to /api/admin/orders: ${escapeHtml(err.message)}</p>
-          <p style="font-size:0.85rem; color:var(--color-text-muted); margin-top:0.5rem;">
-            Make sure your Vercel local dev server (<code>vercel dev</code>) is running if testing serverless functions locally.
+    console.warn('Admin API fetch failed (normal if not running vercel dev):', err);
+    
+    // Provide instant presentation fallback for offline or static testing
+    if (countBadge) countBadge.textContent = '4 Demo Orders';
+    
+    if (statusContainer) {
+      statusContainer.innerHTML = `
+        <div class="vuln-callout" style="border-left-color: var(--color-warning); background: #fffbeb; border-color: #fde68a;">
+          <strong style="color: #92400e;">⚡ Presentation Preview Mode Active:</strong>
+          <p style="color: #78350f; margin-top: 4px;">
+            <code>/api/admin/orders</code> serverless function is not active on this static port (requires <code>vercel dev</code> or Vercel deployment). Displaying simulated database feed below for cybersecurity lecture testing:
           </p>
-        </td>
-      </tr>
-    `;
+        </div>
+      `;
+    }
+
+    renderAdminOrders(MOCK_ADMIN_ORDERS, tbody);
   }
 }
+
+const MOCK_ADMIN_ORDERS = [
+  {
+    id: 'd0000000-0000-0000-0000-000000000001',
+    delivery_name: 'Chidi Okafor (Fake Customer)',
+    delivery_phone: '+234 800 000 0001',
+    delivery_address: '12 Marina Street, Lagos Island, Lagos',
+    total: 45000,
+    status: 'Processing',
+    created_at: new Date(Date.now() - 3600000 * 4).toISOString(),
+    products: { name: 'Handwoven Aso-Oke Agbada Set' },
+    profiles: { full_name: 'Chidi Okafor' }
+  },
+  {
+    id: 'd0000000-0000-0000-0000-000000000005',
+    delivery_name: 'Amina Bello (IDOR Target)',
+    delivery_phone: '+234 800 111 2222',
+    delivery_address: 'Plot 404 Nowhere Close, Maitama, Abuja FCT',
+    total: 24000,
+    status: 'Shipped',
+    created_at: new Date(Date.now() - 3600000 * 12).toISOString(),
+    products: { name: 'Beaded Coral Choker Necklace' },
+    profiles: { full_name: 'Amina Bello' }
+  },
+  {
+    id: 'd0000000-0000-0000-0000-000000000008',
+    delivery_name: 'Babajide Adeleke (Customer)',
+    delivery_phone: '+234 800 222 3333',
+    delivery_address: '5 Admiralty Way, Lekki Phase 1, Lagos',
+    total: 32000,
+    status: 'Delivered',
+    created_at: new Date(Date.now() - 86400000).toISOString(),
+    products: { name: 'Handcrafted Kano Leather Slippers' },
+    profiles: { full_name: 'Babajide Adeleke' }
+  },
+  {
+    id: 'd0000000-0000-0000-0000-000000000010',
+    delivery_name: 'Fatima Danjuma (Customer)',
+    delivery_phone: '+234 800 333 4444',
+    delivery_address: '18 Bompai Road, Nassarawa, Kano',
+    total: 18500,
+    status: 'Processing',
+    created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
+    products: { name: 'Benin Bronze Replica Mask' },
+    profiles: { full_name: 'Fatima Danjuma' }
+  }
+];
 
 function renderAdminOrders(orders, container) {
   if (!orders || orders.length === 0) {

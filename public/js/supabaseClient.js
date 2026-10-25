@@ -3,8 +3,8 @@
 
 // Default demo fallback config (Can be overridden via localStorage or window.ENV)
 // In production/deployment, replace these placeholders with your actual Supabase project credentials.
-const DEFAULT_SUPABASE_URL = window.SUPABASE_URL || localStorage.getItem('SHOPNAIJA_SUPABASE_URL') || 'https://demo-shopnaija-project.supabase.co';
-const DEFAULT_SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || localStorage.getItem('SHOPNAIJA_SUPABASE_ANON_KEY') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.demo-anon-key-placeholder';
+const DEFAULT_SUPABASE_URL = window.SUPABASE_URL || localStorage.getItem('SHOPNAIJA_SUPABASE_URL') || 'https://yngbrzhostqrtltblouy.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || localStorage.getItem('SHOPNAIJA_SUPABASE_ANON_KEY') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InluZ2Jyemhvc3RxcnRsdGJsb3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5MTczOTUsImV4cCI6MjEwODQ5MzM5NX0.E_MDtOe7L_Yv16D9lKzcAN5Pkbq1KRISR3WtdeRHPFE';
 
 // ============================================================================
 // // FIX-2: REMOVE EXPOSED SECRET FROM FRONTEND
