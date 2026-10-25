@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="maskBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c1917"/>
+      <stop offset="100%" stop-color="#292524"/>
+    </linearGradient>
+    <linearGradient id="bronze" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d97706"/>
+      <stop offset="50%" stop-color="#b45309"/>
+      <stop offset="100%" stop-color="#78350f"/>
+    </linearGradient>
+    <linearGradient id="bronzeHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fde68a" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#b45309" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+  <!-- Background -->
+  <rect width="600" height="450" fill="url(#maskBg)"/>
+  <!-- Ambient glow -->
+  <circle cx="300" cy="225" r="160" fill="#b45309" opacity="0.15" filter="blur(40px)"/>
+  
+  <!-- Bronze Mask Silhouette -->
+  <g filter="url(#shadow)">
+    <!-- Crown / Headdress -->
+    <path d="M220 120 Q300 80 380 120 L370 150 Q300 130 230 150 Z" fill="url(#bronze)"/>
+    <circle cx="250" cy="115" r="8" fill="#fde68a"/>
+    <circle cx="280" cy="105" r="8" fill="#fde68a"/>
+    <circle cx="300" cy="100" r="9" fill="#fde68a"/>
+    <circle cx="320" cy="105" r="8" fill="#fde68a"/>
+    <circle cx="350" cy="115" r="8" fill="#fde68a"/>
+    
+    <!-- Face Contour -->
+    <path d="M230 145 C210 220 235 320 300 350 C365 320 390 220 370 145 Q300 130 230 145 Z" fill="url(#bronze)"/>
+    <path d="M245 155 C230 220 250 310 300 335 C350 310 370 220 355 155 Z" fill="url(#bronzeHighlight)" opacity="0.4"/>
+
+    <!-- Forehead Scarification (Idia Marks) -->
+    <rect x="290" y="150" width="6" height="24" rx="3" fill="#451a03"/>
+    <rect x="304" y="150" width="6" height="24" rx="3" fill="#451a03"/>
+
+    <!-- Eyes (Almond Benin Style) -->
+    <path d="M250 205 Q275 195 290 210 Q275 220 250 205 Z" fill="#292524"/>
+    <circle cx="270" cy="207" r="4" fill="#fde68a"/>
+    <path d="M310 210 Q325 195 350 205 Q325 220 310 210 Z" fill="#292524"/>
+    <circle cx="330" cy="207" r="4" fill="#fde68a"/>
+
+    <!-- Broad Nose -->
+    <path d="M296 200 L292 260 L280 268 Q300 274 320 268 L308 260 L304 200 Z" fill="#78350f"/>
+    <!-- Lips -->
+    <path d="M275 295 Q300 288 325 295 Q300 315 275 295 Z" fill="#451a03"/>
+    <!-- Collar Lattice -->
+    <path d="M255 330 Q300 365 345 330 L355 365 Q300 395 245 365 Z" fill="url(#bronze)"/>
+  </g>
+  <!-- Cultural Label Badge -->
+  <rect x="200" y="395" width="200" height="30" rx="15" fill="rgba(0,0,0,0.6)" stroke="#b45309" stroke-width="1.5"/>
+  <text x="300" y="415" font-family="'Rubik', sans-serif" font-size="12" font-weight="700" fill="#fde68a" text-anchor="middle" letter-spacing="1.5">ROYAL BENIN BRONZE</text>
+</svg>

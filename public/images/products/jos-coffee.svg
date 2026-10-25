@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="coffeeBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#291811"/>
+      <stop offset="100%" stop-color="#140b07"/>
+    </linearGradient>
+    <linearGradient id="bagGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#451a03"/>
+      <stop offset="50%" stop-color="#78350f"/>
+      <stop offset="100%" stop-color="#451a03"/>
+    </linearGradient>
+    <filter id="pBagShadow">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+  <rect width="600" height="450" fill="url(#coffeeBg)"/>
+  <circle cx="300" cy="225" r="140" fill="#78350f" opacity="0.2" filter="blur(30px)"/>
+
+  <!-- Coffee Pouch Package -->
+  <g filter="url(#pBagShadow)">
+    <!-- Standup pouch -->
+    <path d="M220 140 L380 140 L395 340 Q300 365 205 340 Z" fill="url(#bagGrad)"/>
+    <!-- Fold top seal -->
+    <rect x="210" y="125" width="180" height="18" rx="4" fill="#292524" stroke="#d97706" stroke-width="1.5"/>
+    <!-- Front Label -->
+    <rect x="240" y="180" width="120" height="130" rx="8" fill="#fef3c7"/>
+    <circle cx="300" cy="215" r="20" fill="#b45309"/>
+    <!-- Coffee bean silhouette -->
+    <path d="M295 205 C285 215 285 225 300 225 C315 225 315 215 305 205 Z" fill="#451a03"/>
+    <path d="M292 208 Q300 215 308 222" stroke="#fef3c7" stroke-width="2" fill="none"/>
+    <text x="300" y="255" font-family="'Rubik', sans-serif" font-size="11" font-weight="800" fill="#78350f" text-anchor="middle">JOS PLATEAU</text>
+    <text x="300" y="272" font-family="'Nunito Sans', sans-serif" font-size="9" font-weight="700" fill="#92400e" text-anchor="middle">100% ARABICA</text>
+    <text x="300" y="295" font-family="'Nunito Sans', sans-serif" font-size="10" font-weight="800" fill="#15803d" text-anchor="middle">500g</text>
+  </g>
+  <rect x="180" y="395" width="240" height="30" rx="15" fill="rgba(0,0,0,0.6)" stroke="#d97706" stroke-width="1.5"/>
+  <text x="300" y="415" font-family="'Rubik', sans-serif" font-size="12" font-weight="700" fill="#fde68a" text-anchor="middle" letter-spacing="1.5">JOS PLATEAU COFFEE</text>
+</svg>
