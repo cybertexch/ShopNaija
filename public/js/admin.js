@@ -61,10 +61,47 @@ export async function initAdminPage() {
   } catch (err) {
     console.warn('Admin API fetch fallback:', err);
     
-    // Provide clean presentation fallback with local orders merged
     const localOrdersRaw = localStorage.getItem('SHOPNAIJA_LOCAL_ORDERS');
     const localOrders = localOrdersRaw ? JSON.parse(localOrdersRaw) : [];
-    const combinedOrders = [...localOrders, ...MOCK_ADMIN_ORDERS];
+    let remoteOrders = [];
+
+    if (isSupabaseConfigured()) {
+      try {
+        const supabase = getSupabase();
+        if (supabase) {
+          const { data, error } = await supabase
+            .from('orders')
+            .select(`
+              id,
+              quantity,
+              total,
+              delivery_name,
+              delivery_address,
+              delivery_phone,
+              delivery_notes,
+              status,
+              created_at,
+              products ( name, price, image_url ),
+              profiles ( full_name, role )
+            `)
+            .order('created_at', { ascending: false });
+
+          if (!error && data && data.length > 0) {
+            remoteOrders = data;
+          }
+        }
+      } catch (e) {
+        console.warn('Direct Supabase admin query note:', e);
+      }
+    }
+
+    const baseList = remoteOrders.length > 0 ? remoteOrders : MOCK_ADMIN_ORDERS;
+    const combinedOrders = [...localOrders];
+    baseList.forEach(o => {
+      if (!combinedOrders.some(c => c.id === o.id)) {
+        combinedOrders.push(o);
+      }
+    });
 
     if (countBadge) countBadge.textContent = `${combinedOrders.length} Orders`;
     renderAdminOrders(combinedOrders, tbody);

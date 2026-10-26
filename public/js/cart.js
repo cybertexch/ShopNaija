@@ -356,12 +356,17 @@ async function handleCheckoutSubmit(e) {
 
   const primaryItem = cart[0];
   const totalAmount = getCartTotal() + SHIPPING_FEE;
+  const totalItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  const productSummary = cart.length === 1 
+    ? `${cart[0].name}${cart[0].quantity > 1 ? ` (×${cart[0].quantity})` : ''}`
+    : `${cart[0].name} + ${cart.length - 1} other item${cart.length > 2 ? 's' : ''}`;
 
   const newOrder = {
     id: newOrderId,
     user_id: userId,
     product_id: primaryItem.id,
-    quantity: primaryItem.quantity,
+    quantity: totalItemsCount,
     total: totalAmount,
     delivery_name: name,
     delivery_phone: phone,
@@ -369,8 +374,15 @@ async function handleCheckoutSubmit(e) {
     delivery_notes: notes,
     status: 'Processing',
     created_at: new Date().toISOString(),
+    items: cart.map(item => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      image_url: item.image_url
+    })),
     products: {
-      name: primaryItem.name,
+      name: productSummary,
       price: primaryItem.price,
       image_url: primaryItem.image_url
     }
@@ -387,20 +399,30 @@ async function handleCheckoutSubmit(e) {
   }
 
   // 2. Insert into remote Supabase if connected
-  if (isSupabaseConfigured() && user) {
+  if (isSupabaseConfigured()) {
     try {
       const supabase = getSupabase();
       if (supabase) {
-        await supabase.from('orders').insert([{
-          user_id: userId,
-          product_id: primaryItem.id,
-          quantity: primaryItem.quantity,
-          total: totalAmount,
+        const targetUserId = user ? user.id : 'c0000000-0000-0000-0000-000000000001';
+        const supabaseRows = cart.map((cartItem, idx) => ({
+          id: idx === 0 ? newOrderId : ('d0000000-0000-0000-0000-' + Math.floor(100000000000 + Math.random() * 900000000000).toString()),
+          user_id: targetUserId,
+          product_id: cartItem.id,
+          quantity: cartItem.quantity,
+          total: idx === 0 ? totalAmount : (Number(cartItem.price) * cartItem.quantity),
           delivery_name: name,
           delivery_phone: phone,
           delivery_address: address,
+          delivery_notes: notes,
           status: 'Processing'
-        }]);
+        }));
+
+        const { error: insErr } = await supabase.from('orders').insert(supabaseRows);
+        if (insErr) {
+          console.warn('Supabase order insert notice:', insErr.message);
+        } else {
+          console.log('Successfully recorded orders to Supabase:', supabaseRows.length);
+        }
       }
     } catch (err) {
       console.info('Supabase insert skipped or offline:', err.message);
