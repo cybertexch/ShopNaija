@@ -47,6 +47,10 @@ export async function getCurrentUser() {
 export async function initHeaderAuth() {
   const user = await getCurrentUser();
   const authContainer = document.getElementById('nav-auth-container');
+  const cartBtn = document.getElementById('cart-trigger-btn');
+  const navOrders = document.getElementById('nav-orders');
+  const navOrdersLi = navOrders?.closest('li');
+
   const isInAdminDir = window.location.pathname.includes('/admin');
   const basePath = isInAdminDir ? '../' : '';
   const adminPath = isInAdminDir ? 'index.html' : 'admin/';
@@ -56,10 +60,24 @@ export async function initHeaderAuth() {
   // Ensure any previous bottom nav element is removed from DOM
   document.getElementById('mobile-bottom-nav-bar')?.remove();
 
-  if (authContainer) {
-    if (user) {
-      const emailStr = user.email || user.fullName || 'User';
-      const initial = (emailStr[0] || 'U').toUpperCase();
+  // Remove any Products links from navbar (homepage is the products page)
+  document.querySelectorAll('.site-header .nav-links a').forEach(a => {
+    const text = a.textContent.trim().toLowerCase();
+    const href = a.getAttribute('href') || '';
+    if (text === 'products' || href === 'index.html' || href === '../index.html') {
+      a.closest('li')?.remove();
+    }
+  });
+
+  if (user) {
+    // Logged in: show Cart/Bag and My Orders
+    if (cartBtn) cartBtn.style.display = 'inline-flex';
+    if (navOrders) navOrders.style.display = 'inline-block';
+    if (navOrdersLi) navOrdersLi.style.display = 'block';
+
+    if (authContainer) {
+      const emailStr = user.fullName || user.email || 'User';
+      const initial = (emailStr.trim()[0] || 'U').toUpperCase();
 
       authContainer.innerHTML = `
         <div class="user-avatar-wrap" style="position: relative;">
@@ -114,7 +132,14 @@ export async function initHeaderAuth() {
         }
         window.location.href = logoutTarget;
       });
-    } else {
+    }
+  } else {
+    // Logged out: hide Cart/Bag and My Orders
+    if (cartBtn) cartBtn.style.display = 'none';
+    if (navOrders) navOrders.style.display = 'none';
+    if (navOrdersLi) navOrdersLi.style.display = 'none';
+
+    if (authContainer) {
       authContainer.innerHTML = `
         <a href="${loginPath}" class="btn btn-primary btn-sm">Log In</a>
       `;

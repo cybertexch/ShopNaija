@@ -27,7 +27,12 @@ function saveCart(cart) {
   }
 }
 
-export function addToCart(product, qty = 1) {
+export async function addToCart(product, qty = 1) {
+  const user = await getCurrentUser();
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
   const cart = getCart();
   const existing = cart.find(item => item.id === product.id);
   if (existing) {
