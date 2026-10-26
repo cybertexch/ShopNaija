@@ -223,9 +223,6 @@ export async function loadOrderDetail() {
           <strong>Access Denied or Order Not Found</strong>
           <p style="margin-top:4px;">${fetchError ? escapeHtml(fetchError.message) : 'Order could not be loaded.'}</p>
         </div>
-        <p style="margin-top:1rem; font-size:0.9rem; color:var(--color-text-muted);">
-          <em>If you are testing the FIXED version:</em> This is the expected defensive behavior! You cannot view another customer's order.
-        </p>
         <a href="orders.html" class="btn btn-primary" style="margin-top:1.5rem;">Return to My Orders</a>
       </div>
     `;
@@ -237,7 +234,6 @@ export async function loadOrderDetail() {
 
 function renderOrderDetail(order, currentUser, container) {
   const isOwner = currentUser.id === order.user_id;
-  const isIdorExposed = !isOwner && currentUser.role !== 'admin';
   const productName = order.products?.name || 'Nigerian Heritage Product';
   const productPrice = order.products?.price || order.total;
   const productImage = order.products?.image_url || 'images/products/aso-oke.svg';
@@ -247,16 +243,6 @@ function renderOrderDetail(order, currentUser, container) {
   });
 
   container.innerHTML = `
-    ${isIdorExposed ? `
-      <div class="vuln-callout" style="border-left-color: var(--color-danger); background: #fff1f2; border-color: #fecdd3;">
-        <strong style="color: #9f1239;">🚨 VULN-1 IDOR ACTIVE: You are viewing another customer's order!</strong>
-        <p style="color: #4c0519; margin-top: 4px;">
-          You are currently authenticated as <strong>${escapeHtml(currentUser.fullName)}</strong> (UUID: <code>${currentUser.id.substring(0, 8)}...</code>), 
-          yet you are viewing private personal delivery information belonging to customer ID <code>${order.user_id.substring(0, 8)}...</code>!
-        </p>
-      </div>
-    ` : ''}
-
     <div class="order-detail-header">
       <div>
         <div style="font-size:0.85rem; color:var(--color-text-muted); text-transform:uppercase; font-weight:700;">

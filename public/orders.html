@@ -29,7 +29,6 @@
         <ul class="nav-links">
           <li><a href="index.html" class="nav-link">Products</a></li>
           <li><a href="orders.html" class="nav-link active">My Orders</a></li>
-          <li><a href="admin.html" class="nav-link">Admin Dashboard</a></li>
         </ul>
       </nav>
 
@@ -44,13 +43,6 @@
     <div class="page-header">
       <h1 class="page-title">My Order History</h1>
       <p class="page-subtitle">Track your recent orders and delivery status.</p>
-    </div>
-
-    <!-- Educational Demonstration Hint for IDOR testing -->
-    <div class="vuln-callout">
-      <strong>🔍 Defensive Lab Demonstration (VULN-1 IDOR):</strong>
-      When you click <em>View Details</em>, take note of the order ID in your address bar (e.g. <code>order.html?id=d0000000-0000-0000-0000-000000000001</code>). 
-      To test the IDOR vulnerability, replace the ID in the URL with Customer 2's order: <code>d0000000-0000-0000-0000-000000000005</code>.
     </div>
 
     <div class="table-responsive">

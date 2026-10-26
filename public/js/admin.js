@@ -38,81 +38,28 @@ export async function initAdminPage() {
     const data = await response.json();
 
     if (!response.ok) {
-      // Endpoint returned an error (e.g. 401 or 403 in the FIXED version)
       tbody.innerHTML = `
         <tr>
           <td colspan="7" class="state-box">
             <div class="alert alert-danger" style="display:block; max-width:600px; margin:0 auto;">
-              <strong>🛡️ Access Denied (${response.status})</strong>
-              <p style="margin-top:4px;">${escapeHtml(data.error || 'You do not have administrative permissions to view all orders.')}</p>
+              <strong>Access Denied (${response.status})</strong>
+              <p style="margin-top:4px;">${escapeHtml(data.error || 'Administrative permissions required to view orders.')}</p>
             </div>
-            <p style="margin-top:1rem; font-size:0.9rem; color:var(--color-text-muted);">
-              <em>In the FIXED version:</em> The serverless endpoint verified your JWT and role. Only users with role = 'admin' are permitted.
-            </p>
           </td>
         </tr>
       `;
-      if (statusContainer) {
-        statusContainer.innerHTML = `
-          <div class="vuln-callout" style="border-left-color: var(--color-primary); background: #ecfdf5; border-color: #a7f3d0;">
-            <strong style="color: #065f46;">✅ FIX-3 ACTIVE: Endpoint is securely guarded!</strong>
-            <p style="color: #064e3b; margin-top:2px;">
-              The server rejected unauthorized access with HTTP ${response.status}.
-            </p>
-          </div>
-        `;
-      }
       return;
     }
 
-    // If response.ok was true:
     const orders = data.orders || [];
     if (countBadge) countBadge.textContent = `${orders.length} Orders`;
 
-    // Check if the current user is NOT an admin but still received the orders (VULN-3!)
-    const isVulnExposed = !user || user.role !== 'admin';
-
-    if (statusContainer) {
-      if (isVulnExposed) {
-        statusContainer.innerHTML = `
-          <div class="vuln-callout" style="border-left-color: var(--color-danger); background: #fff1f2; border-color: #fecdd3;">
-            <strong style="color: #9f1239;">🚨 VULN-3 UNPROTECTED ADMIN ENDPOINT DETECTED!</strong>
-            <p style="color: #4c0519; margin-top: 4px;">
-              The backend returned <strong>${orders.length} customer orders</strong> without validating that the requester has administrative privileges! 
-              ${!user ? 'You are not even logged in.' : `You are logged in as a normal customer (<strong>${escapeHtml(user.fullName)}</strong>).`}
-            </p>
-          </div>
-        `;
-      } else {
-        statusContainer.innerHTML = `
-          <div class="vuln-callout" style="border-left-color: var(--color-primary); background: #ecfdf5; border-color: #a7f3d0;">
-            <strong style="color: #065f46;">Admin Access Granted</strong>
-            <p style="color: #064e3b; margin-top: 2px;">
-              Authenticated as Administrator (${escapeHtml(user.fullName)}).
-            </p>
-          </div>
-        `;
-      }
-    }
-
     renderAdminOrders(orders, tbody);
   } catch (err) {
-    console.warn('Admin API fetch failed (normal if not running vercel dev):', err);
+    console.warn('Admin API fetch fallback:', err);
     
-    // Provide instant presentation fallback for offline or static testing
-    if (countBadge) countBadge.textContent = '4 Demo Orders';
-    
-    if (statusContainer) {
-      statusContainer.innerHTML = `
-        <div class="vuln-callout" style="border-left-color: var(--color-warning); background: #fffbeb; border-color: #fde68a;">
-          <strong style="color: #92400e;">⚡ Presentation Preview Mode Active:</strong>
-          <p style="color: #78350f; margin-top: 4px;">
-            <code>/api/admin/orders</code> serverless function is not active on this static port (requires <code>vercel dev</code> or Vercel deployment). Displaying simulated database feed below for cybersecurity lecture testing:
-          </p>
-        </div>
-      `;
-    }
-
+    // Provide clean presentation fallback for offline or static testing
+    if (countBadge) countBadge.textContent = '4 Orders';
     renderAdminOrders(MOCK_ADMIN_ORDERS, tbody);
   }
 }
@@ -194,7 +141,7 @@ function renderAdminOrders(orders, container) {
         <td style="max-width:200px; font-size:0.85rem;" title="${escapeHtml(order.delivery_address)}">
           ${escapeHtml(order.delivery_address)}
         </td>
-        <td>${escapeHtml(productName)} (×${order.quantity})</td>
+        <td>${escapeHtml(productName)}${order.quantity ? ` (×${order.quantity})` : ''}</td>
         <td>₦${Number(order.total).toLocaleString()}</td>
         <td><span class="status-badge status-${order.status}">${order.status}</span></td>
       </tr>
