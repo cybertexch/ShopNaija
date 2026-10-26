@@ -143,11 +143,10 @@ function renderAdminOrders(orders, container) {
         <td>${escapeHtml(order.delivery_phone)}</td>
         <td style="max-width:220px; font-size:0.85rem;">
           <div>${escapeHtml(order.delivery_address)}</div>
-          ${order.delivery_notes ? `
-            <!-- VULN-4: STORED XSS IN ADMIN DASHBOARD VIA UNSANITIZED DELIVERY NOTES -->
+            <!-- FIX-4: Escaped delivery notes to prevent Stored XSS -->
             <div class="delivery-notes-box">
-              <span style="font-size:0.75rem; font-weight:700; color:var(--color-warning);">Note:</span>
-              ${order.delivery_notes}
+              <span style="font-size:0.75rem; font-weight:700; color:var(--color-primary);">Note:</span>
+              ${escapeHtml(order.delivery_notes)}
             </div>
           ` : ''}
         </td>

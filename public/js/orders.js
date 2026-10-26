@@ -297,8 +297,8 @@ function renderOrderDetail(order, currentUser, container) {
         ${order.delivery_notes ? `
           <div class="detail-item" style="grid-column: 1 / -1;">
             <div class="detail-label">Courier &amp; Special Instructions</div>
-            <!-- VULN-4: Unsanitized delivery notes rendered as raw HTML -->
-            <div class="delivery-notes-box">${order.delivery_notes}</div>
+            <!-- FIX-4: Escaped delivery notes to prevent Stored XSS -->
+            <div class="delivery-notes-box">${escapeHtml(order.delivery_notes)}</div>
           </div>
         ` : ''}
       </div>
