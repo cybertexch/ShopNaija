@@ -971,7 +971,7 @@ a:hover {
 /* Responsive Breakpoints & Mobile Optimization */
 @media (max-width: 768px) {
   :root {
-    --banner-height: 36px;
+    --banner-height: 34px;
   }
 
   body {
@@ -991,27 +991,91 @@ a:hover {
     font-size: 10px;
   }
 
-  /* Header adjustments */
+  /* Header adjustments: Uncramped, clean top bar */
   .site-header {
     padding: 0;
   }
 
   .header-container {
-    padding: 0.75rem 1rem;
+    padding: 0.55rem 0.85rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 0.5rem;
   }
 
   .brand-link {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
+    gap: 6px;
   }
 
-  /* Transform top nav into sleek mobile bottom bar */
+  .brand-link .flag-dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* Hide the desktop Demo Store pill in top header on mobile - banner already states demo */
+  .brand-tag {
+    display: none !important;
+  }
+
+  /* Transform top nav links into sleek mobile bottom bar */
   .site-header nav {
-    display: none; /* Hidden from top on mobile */
+    display: none;
   }
 
+  .nav-auth {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  /* Mobile Shopping Bag Trigger Button */
+  .cart-trigger-btn {
+    padding: 6px 10px;
+    font-size: 0.82rem;
+    gap: 5px;
+    border-radius: var(--radius-full);
+    min-height: 36px;
+  }
+
+  /* Hide the text "Bag" on narrow screens so it functions as a compact bag icon with count */
+  .cart-btn-label {
+    display: none;
+  }
+
+  .cart-trigger-btn svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .cart-count-badge {
+    font-size: 0.68rem;
+    padding: 2px 6px;
+  }
+
+  #nav-auth-container .btn {
+    min-height: 36px;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.82rem;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+  }
+
+  .user-badge {
+    font-size: 0.78rem;
+    padding: 3px 8px;
+    max-width: 110px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .user-role-tag {
+    display: none;
+  }
+
+  /* Mobile Bottom Navigation Bar */
   .mobile-bottom-nav {
     display: flex !important;
     position: fixed;
@@ -1019,13 +1083,16 @@ a:hover {
     left: 0;
     right: 0;
     height: 60px;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-top: 1px solid var(--color-border);
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
     z-index: 999;
     align-items: center;
     justify-content: space-around;
     padding: 0 0.5rem;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   .mobile-nav-item {
@@ -1037,7 +1104,7 @@ a:hover {
     flex: 1;
     height: 100%;
     color: var(--color-text-muted);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 700;
     text-decoration: none;
     transition: color 0.15s ease;
@@ -1059,48 +1126,256 @@ a:hover {
 
   /* Main content padding on mobile */
   .main-content {
-    padding: 1.25rem 1rem 2.5rem;
+    padding: 1rem 0.85rem 3rem;
   }
 
-  .page-header {
+  /* Hero Section on Mobile */
+  .hero-section {
+    padding: 1.75rem 1.15rem 1.5rem;
+    margin-bottom: 1.25rem;
+    border-radius: var(--radius-md);
+  }
+
+  .hero-pill {
+    font-size: 0.72rem;
+    padding: 4px 8px;
+    margin-bottom: 0.85rem;
+    display: inline-flex;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .hero-title {
+    font-size: 1.6rem;
+    line-height: 1.25;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero-desc {
+    font-size: 0.88rem;
+    line-height: 1.45;
+    margin-bottom: 1.15rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
     margin-bottom: 1.25rem;
   }
 
-  .page-title {
-    font-size: 1.45rem;
+  .hero-actions .btn {
+    flex: 1;
+    min-width: 130px;
+    font-size: 0.88rem;
+    padding: 0.6rem 0.85rem;
   }
 
-  .page-subtitle {
-    font-size: 0.9rem;
+  .hero-stats {
+    gap: 0.5rem;
+    padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
   }
 
-  /* Products Grid on mobile */
+  .stat-num {
+    font-size: 1.3rem;
+  }
+
+  .stat-label {
+    font-size: 0.68rem;
+  }
+
+  /* Trust Bar on Mobile - Clean 2x2 Grid */
+  .trust-bar {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+    padding: 0.85rem;
+    margin-bottom: 1.25rem;
+    border-radius: var(--radius-md);
+  }
+
+  .trust-item {
+    gap: 8px;
+    align-items: center;
+  }
+
+  .trust-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+  }
+
+  .trust-icon svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .trust-item strong {
+    font-size: 0.78rem;
+    line-height: 1.2;
+  }
+
+  .trust-item span {
+    display: none; /* Hide verbose subtitle for uncluttered modern look */
+  }
+
+  /* Category Filter Chips on Mobile - Smooth Horizontal Pill Scroll without scrollbar */
+  .filter-bar {
+    margin-bottom: 1.15rem;
+    gap: 0.5rem;
+  }
+
+  .filter-title {
+    font-size: 1.05rem;
+  }
+
+  .filter-chips {
+    gap: 6px;
+    padding: 2px 0 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .filter-chips::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-chip {
+    padding: 6px 13px;
+    font-size: 0.8rem;
+    border-radius: var(--radius-full);
+  }
+
+  /* Product Catalog Grid on Mobile - Beautiful 2-column layout */
   .products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 0.85rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .product-card {
+    border-radius: var(--radius-md);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
   }
 
   .product-image-wrap {
-    height: 140px;
+    height: 145px;
+  }
+
+  .product-badge-pill {
+    top: 6px;
+    left: 6px;
+    font-size: 0.62rem;
+    padding: 2px 6px;
+    letter-spacing: 0.02em;
+    backdrop-filter: blur(4px);
+  }
+
+  .product-stock-tag {
+    bottom: 6px;
+    right: 6px;
+    font-size: 0.58rem;
+    padding: 1px 6px;
+    max-width: 85%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .product-details {
-    padding: 0.85rem;
+    padding: 0.7rem 0.65rem 0.8rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .product-rating {
+    font-size: 0.72rem;
+    gap: 3px;
+    margin-bottom: 0.3rem;
+  }
+
+  .stars {
+    font-size: 0.72rem;
+    letter-spacing: 0.5px;
+  }
+
+  .rating-count {
+    font-size: 0.68rem;
   }
 
   .product-name {
-    font-size: 0.95rem;
-    margin-bottom: 0.35rem;
+    font-size: 0.86rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.45rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 2.6em; /* Uniform 2-line title height prevents jagged cards */
+  }
+
+  /* Price container: Prevents crammed prices */
+  .price-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 2px 5px;
+    margin-top: auto;
+    margin-bottom: 0.65rem;
   }
 
   .product-price {
-    font-size: 1.1rem;
-    margin-bottom: 0.75rem;
+    font-size: 1.12rem;
+    font-weight: 850;
+    line-height: 1.1;
+    margin-bottom: 0;
+  }
+
+  .product-old-price {
+    font-size: 0.75rem;
+  }
+
+  .discount-badge {
+    font-size: 0.62rem;
+    padding: 1px 4px;
+    border-radius: 3px;
+  }
+
+  .btn-add-cart {
+    font-size: 0.8rem;
+    min-height: 38px;
+    padding: 0.4rem 0.5rem;
+    border-radius: var(--radius-md);
+    gap: 5px;
+  }
+
+  .btn-add-cart svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Page headers on mobile */
+  .page-header {
+    margin-bottom: 1.15rem;
+  }
+
+  .page-title {
+    font-size: 1.35rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.85rem;
   }
 
   /* Buttons & touch targets */
   .btn {
-    min-height: 44px;
+    min-height: 42px;
     touch-action: manipulation;
   }
 
@@ -1109,18 +1384,18 @@ a:hover {
   }
 
   .btn-sm {
-    min-height: 40px;
+    min-height: 36px;
   }
 
   /* Input fields: 16px to prevent iOS Safari auto-zoom */
   .form-input {
     font-size: 16px !important;
-    min-height: 46px;
+    min-height: 44px;
   }
 
   .auth-card {
     margin: 1rem auto;
-    padding: 1.5rem 1.25rem;
+    padding: 1.5rem 1.15rem;
   }
 
   .cred-chip {
@@ -1133,7 +1408,7 @@ a:hover {
 
   /* Order details on mobile */
   .order-detail-card {
-    padding: 1.25rem;
+    padding: 1.15rem;
   }
 
   .order-detail-header {
@@ -1144,6 +1419,18 @@ a:hover {
   .detail-grid {
     grid-template-columns: 1fr;
     gap: 0.65rem;
+  }
+
+  /* Cart Drawer and Checkout Modal on mobile */
+  .cart-drawer {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .checkout-modal-card {
+    padding: 1.25rem 1rem;
+    max-height: 94vh;
+    border-radius: var(--radius-md);
   }
 
   /* Table swipe indicator */
@@ -1166,18 +1453,19 @@ a:hover {
   }
 }
 
-/* Extra small mobile screens (iPhone SE, 360px Android) */
-@media (max-width: 380px) {
+/* Extra small mobile screens (e.g. 360px Android, iPhone SE) */
+@media (max-width: 360px) {
   .products-grid {
     grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .product-image-wrap {
+    height: 175px;
   }
 
   .brand-link {
-    font-size: 1.1rem;
-  }
-
-  .brand-tag {
-    display: none;
+    font-size: 1.05rem;
   }
 }
 
