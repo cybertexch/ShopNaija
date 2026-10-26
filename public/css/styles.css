@@ -206,6 +206,117 @@ a:hover {
   border-radius: 4px;
 }
 
+/* User Avatar & Account Dropdown */
+.user-avatar-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.user-avatar-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.user-avatar-btn:hover {
+  transform: scale(1.05);
+}
+
+.user-avatar-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #059669 0%, #022c22 100%);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(5, 150, 105, 0.25);
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 220px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  padding: 6px 0;
+  z-index: 10001;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.user-dropdown-menu.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.user-dropdown-userinfo {
+  padding: 8px 14px 10px;
+}
+
+.user-dropdown-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--color-text-main);
+  line-height: 1.2;
+}
+
+.user-dropdown-email {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  word-break: break-all;
+  margin: 2px 0 6px;
+}
+
+.user-dropdown-divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 4px 0;
+}
+
+.user-dropdown-link, .user-dropdown-logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-main);
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.user-dropdown-link:hover, .user-dropdown-logout-btn:hover {
+  background: var(--color-surface-alt);
+  color: var(--color-primary);
+}
+
+.user-dropdown-logout-btn {
+  color: var(--color-danger);
+}
+
 /* Layout Containers */
 .main-content {
   flex: 1;
@@ -956,18 +1067,6 @@ a:hover {
   color: var(--color-text-muted);
 }
 
-/* Mobile Bottom Nav - Hidden on Desktop */
-.mobile-bottom-nav {
-  display: none;
-}
-
-.mobile-nav-item svg {
-  width: 20px;
-  height: 20px;
-  max-width: 24px;
-  max-height: 24px;
-}
-
 /* Responsive Breakpoints & Mobile Optimization */
 @media (max-width: 768px) {
   :root {
@@ -976,7 +1075,6 @@ a:hover {
 
   body {
     padding-top: var(--banner-height);
-    padding-bottom: 70px; /* Space for mobile sticky bottom navigation */
   }
 
   .demo-banner {
@@ -1019,9 +1117,23 @@ a:hover {
     display: none !important;
   }
 
-  /* Transform top nav links into sleek mobile bottom bar */
+  /* Clean top navigation links */
   .site-header nav {
-    display: none;
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    list-style: none;
+  }
+
+  .nav-link {
+    font-size: 0.82rem;
+    padding: 4px 8px;
+    font-weight: 600;
   }
 
   .nav-auth {
@@ -1062,66 +1174,10 @@ a:hover {
     white-space: nowrap;
   }
 
-  .user-badge {
-    font-size: 0.78rem;
-    padding: 3px 8px;
-    max-width: 110px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .user-role-tag {
-    display: none;
-  }
-
-  /* Mobile Bottom Navigation Bar */
-  .mobile-bottom-nav {
-    display: flex !important;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-top: 1px solid var(--color-border);
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
-    z-index: 999;
-    align-items: center;
-    justify-content: space-around;
-    padding: 0 0.5rem;
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-
-  .mobile-nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    flex: 1;
-    height: 100%;
-    color: var(--color-text-muted);
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-decoration: none;
-    transition: color 0.15s ease;
-    touch-action: manipulation;
-  }
-
-  .mobile-nav-item svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .mobile-nav-item.active, .mobile-nav-item:hover {
-    color: var(--color-primary);
-  }
-
-  .mobile-nav-item.active svg {
-    stroke: var(--color-primary);
+  .user-avatar-circle {
+    width: 34px;
+    height: 34px;
+    font-size: 0.9rem;
   }
 
   /* Main content padding on mobile */
