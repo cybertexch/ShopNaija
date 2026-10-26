@@ -1,9 +1,6 @@
-// public/js/products.js
-// Products listing logic for ShopNaija Demo
-// Delivers modern Nigerian luxury aesthetic with instant rendering and category filtering
-
 import { getSupabase, isSupabaseConfigured } from './supabaseClient.js';
 import { initHeaderAuth } from './auth.js';
+import { initCartUI, addToCart, openCart } from './cart.js?v=3';
 
 // Fallback demo products with rich presentation metadata
 const FALLBACK_PRODUCTS = [
@@ -169,6 +166,10 @@ export async function loadProducts() {
   // 3. Initialize header auth in parallel
   initHeaderAuth();
 
+  // 4. Initialize Cart UI & trigger
+  initCartUI();
+  document.getElementById('cart-trigger-btn')?.addEventListener('click', openCart);
+
   // 4. Query remote Supabase if connected
   if (isSupabaseConfigured()) {
     try {
@@ -269,18 +270,26 @@ function renderProducts(products, container) {
             ` : ''}
           </div>
 
-          <button class="btn btn-primary btn-block" style="gap: 8px; justify-content: center;" onclick="window.location.href='orders.html'" id="btn-order-${product.id}">
+          <button class="btn btn-primary btn-block btn-add-cart" style="gap: 8px; justify-content: center;" data-id="${product.id}" id="btn-order-${product.id}">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
               <line x1="3" y1="6" x2="21" y2="6"></line>
               <path d="M16 10a4 4 0 0 1-8 0"></path>
             </svg>
-            <span>Order Item (Demo)</span>
+            <span>Add to Bag</span>
           </button>
         </div>
       </article>
     `;
   }).join('');
+
+  container.querySelectorAll('.btn-add-cart').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const prodId = btn.dataset.id;
+      const prod = currentProductsList.find(p => p.id === prodId);
+      if (prod) addToCart(prod);
+    });
+  });
 }
 
 function escapeHtml(str) {
