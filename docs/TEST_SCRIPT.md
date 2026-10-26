@@ -17,7 +17,7 @@ This script provides step-by-step instructions for the security speaker during t
 
 ### Step-by-Step Instructions
 1. Navigate to `login.html`.
-2. Click the quick-fill chip **Customer 1 (Chidi)** (or enter `chidi@shopnaija.demo` / `password123`) and click **Sign In**.
+2. Enter email `chidi@shopnaija.demo` and password `password123`, then click **Sign In**.
 3. You will be redirected to `orders.html`. Click **View Details →** on Chidi's top order.
 4. Look at your browser address bar. The URL will look like:
    `http://.../order.html?id=d0000000-0000-0000-0000-000000000001`
@@ -27,12 +27,11 @@ This script provides step-by-step instructions for the security speaker during t
 
 ### Expected Result on `vulnerable` Branch
 * The page displays Customer 2's order!
-* You see **Amina Bello (Confidential Customer)**, her Maitama Abuja address, and her private phone number, along with the warning banner:
-  `🚨 VULN-1 IDOR ACTIVE: You are viewing another customer's order!`
+* You see **Amina Bello (Confidential Customer)**, her Maitama Abuja address, and her private phone number (demonstrating broken access control / IDOR).
 
 ### Expected Result on `fixed` Branch
 * The page blocks access and displays:
-  `🛡️ Access Denied: Order could not be loaded or does not belong to you.`
+  `Access Denied or Order Not Found`
 * The underlying Supabase RLS engine returns zero rows because `auth.uid() != user_id`.
 
 ---
@@ -66,19 +65,18 @@ This script provides step-by-step instructions for the security speaker during t
 
 ### Step-by-Step Instructions
 1. Open a **New Incognito / Private Window** (so that you are completely logged out).
-2. Directly navigate to:
+2. Directly navigate to the admin API endpoint:
    `http://.../api/admin/orders`
 3. Alternatively, open DevTools -> Console and paste:
    ```javascript
    fetch('/api/admin/orders').then(r => r.json()).then(console.log);
    ```
-4. Or open `admin.html` while logged in as a normal customer (Chidi).
+4. Or directly browse to the admin subdirectory `/admin/` in your address bar.
 
 ### Expected Result on `vulnerable` Branch
 * The server responds with `HTTP 200 OK`.
-* The browser displays raw JSON containing all 20 customer orders, including customer names, phone numbers, addresses, and purchase amounts.
-* If viewed via `admin.html`, the banner displays:
-  `🚨 VULN-3 UNPROTECTED ADMIN ENDPOINT DETECTED!`
+* The browser / API returns raw JSON containing all 20 customer orders, including customer names, phone numbers, addresses, and purchase amounts without authentication.
+* If viewed via the `/admin/` portal, all customer orders are loaded into the admin fulfillment table.
 
 ### Expected Result on `fixed` Branch
 * The server responds with `HTTP 401 Unauthorized` (if unauthenticated) or `HTTP 403 Forbidden` (if authenticated as a customer).

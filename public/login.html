@@ -29,7 +29,6 @@
         <ul class="nav-links">
           <li><a href="index.html" class="nav-link">Products</a></li>
           <li><a href="orders.html" class="nav-link">My Orders</a></li>
-          <li><a href="admin.html" class="nav-link">Admin Dashboard</a></li>
         </ul>
       </nav>
 
@@ -57,13 +56,12 @@
 
         <div class="form-group">
           <label class="form-label" for="email">Email Address</label>
-          <input type="email" id="email" class="form-input" placeholder="customer@shopnaija.demo" required autocomplete="email">
+          <input type="email" id="email" class="form-input" placeholder="customer@example.com" required autocomplete="email">
         </div>
 
         <div class="form-group">
           <label class="form-label" for="password">Password</label>
           <input type="password" id="password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
-          <p class="form-hint">Default demo password for seeded accounts: <code>password123</code></p>
         </div>
 
         <button type="submit" class="btn btn-primary btn-block" id="submit-btn">
@@ -75,25 +73,6 @@
         <button type="button" id="toggle-mode-btn" class="btn btn-outline btn-sm btn-block">
           Need an account? Switch to Sign Up
         </button>
-      </div>
-
-      <!-- Quick Fill Buttons for TikTok LIVE Demo Speakers -->
-      <div class="demo-creds-box">
-        <div class="demo-creds-title">⚡ Quick Demo Test Accounts:</div>
-        <p style="font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 6px;">
-          Click to autofill seeded credentials:
-        </p>
-        <div class="creds-btn-group">
-          <button type="button" class="cred-chip" data-email="chidi@shopnaija.demo" data-pwd="password123" data-name="Chidi Okafor (Fake)">
-            Customer 1 (Chidi)
-          </button>
-          <button type="button" class="cred-chip" data-email="amina@shopnaija.demo" data-pwd="password123" data-name="Amina Bello (Fake)">
-            Customer 2 (Amina - IDOR Target)
-          </button>
-          <button type="button" class="cred-chip" data-email="admin@shopnaija.demo" data-pwd="password123" data-name="Captain Admin (Demo)">
-            Admin (Captain Admin)
-          </button>
-        </div>
       </div>
     </div>
   </main>
@@ -117,17 +96,6 @@
       const submitBtn = document.getElementById('submit-btn');
       const fullnameGroup = document.getElementById('fullname-group');
       const alertBox = document.getElementById('auth-alert');
-
-      // Autofill chips
-      document.querySelectorAll('.cred-chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-          document.getElementById('email').value = chip.dataset.email;
-          document.getElementById('password').value = chip.dataset.pwd;
-          if (chip.dataset.name) {
-            document.getElementById('full_name').value = chip.dataset.name;
-          }
-        });
-      });
 
       toggleBtn.addEventListener('click', () => {
         isSignUp = !isSignUp;
