@@ -213,7 +213,8 @@ export async function loadOrderDetail() {
     }
   } else {
     // Instant fallback demo mock (0ms)
-    order = FALLBACK_ORDERS.find(o => o.id === orderId) || FALLBACK_ORDERS[0];
+    const localOrders = JSON.parse(localStorage.getItem('SHOPNAIJA_LOCAL_ORDERS') || '[]');
+    order = localOrders.find(o => o.id === orderId) || FALLBACK_ORDERS.find(o => o.id === orderId) || FALLBACK_ORDERS[0];
   }
 
   if (fetchError || !order) {
@@ -293,6 +294,13 @@ function renderOrderDetail(order, currentUser, container) {
           <div class="detail-label">Delivery Address</div>
           <div class="detail-value">${escapeHtml(order.delivery_address)}</div>
         </div>
+        ${order.delivery_notes ? `
+          <div class="detail-item" style="grid-column: 1 / -1;">
+            <div class="detail-label">Courier &amp; Special Instructions</div>
+            <!-- VULN-4: Unsanitized delivery notes rendered as raw HTML -->
+            <div class="delivery-notes-box">${order.delivery_notes}</div>
+          </div>
+        ` : ''}
       </div>
     </div>
 

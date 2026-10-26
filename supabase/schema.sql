@@ -30,6 +30,7 @@ create table if not exists public.orders (
   delivery_name text not null,
   delivery_address text not null,
   delivery_phone text not null,
+  delivery_notes text default '',
   status text not null default 'Processing' check (status in ('Processing', 'Shipped', 'Delivered', 'Cancelled')),
   created_at timestamptz default now() not null
 );

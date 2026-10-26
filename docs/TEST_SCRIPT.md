@@ -89,3 +89,42 @@ This script provides step-by-step instructions for the security speaker during t
   { "error": "Forbidden: User does not hold the admin role" }
   ```
 * Only logging in as **Captain Admin** (`admin@shopnaija.demo`) grants access.
+
+---
+
+## Test 4: Stored XSS via Unsanitized Checkout Form (VULN-4)
+
+### Business Impact (One-Line)
+> **Account takeover & administrative surveillance:** An attacker submits malicious HTML/JavaScript in the delivery notes field at checkout. When the administrator inspects the order queue, the payload executes automatically in the admin's session, enabling cookie/token exfiltration and full visibility into all customer orders, names, addresses, and phone numbers.
+
+### Step-by-Step Instructions
+1. Open the homepage (`index.html`) in your browser.
+2. Click **Add to Bag** on any product (e.g. *Royal Silk Kaftan* or *Authentic Adire Silk Robe*).
+3. The shopping bag drawer slides out from the right showing your item and total. Click **Proceed to Checkout**.
+4. Fill out the checkout details:
+   - **Recipient Full Name**: `Attacker Mal`
+   - **Phone Number**: `08099887766`
+   - **Delivery Address**: `14 Broad Street, Lagos Island`
+   - **Delivery Instructions & Gift Notes**: Enter a live XSS demonstration payload, for example:
+     ```html
+     <img src=x onerror="alert('Stored XSS Executed! Admin session breached: ' + document.location.href)">
+     ```
+     *(Or to demonstrate session cookie / token harvesting)*:
+     ```html
+     <script>console.log('Breached auth storage:', localStorage.getItem('supabase.auth.token') || 'Active Session Captured');</script>Urgent VIP Delivery
+     ```
+5. Click **Confirm & Dispatch Order**.
+6. You will see an instant confirmation and be redirected to `order.html`. Notice that the alert payload triggers immediately when rendering the delivery instructions.
+7. Now open `/admin/` in the browser (or navigate directly to the administrative dashboard as an order fulfillment officer).
+
+### Expected Result on `vulnerable` Branch
+* The newly submitted order appears in the fulfillment queue.
+* Because the delivery notes are rendered directly into the DOM using raw unescaped `innerHTML`, the embedded script triggers immediately inside the administrator's dashboard (`alert('Stored XSS Executed!...')`).
+* An attacker can abuse this execution context to siphon other customer orders, intercept administrator tokens, or make unauthorized modifications to product prices.
+
+### Expected Result on `fixed` Branch
+* The delivery note is safely encoded using `escapeHtml()`.
+* In the admin dashboard and order confirmation page, the payload is rendered as harmless literal text:
+  `&lt;img src=x onerror=&quot;alert(...)&quot;&gt;`
+* No script or event handler executes. Customer data remains safe.
+

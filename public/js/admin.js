@@ -51,25 +51,33 @@ export async function initAdminPage() {
       return;
     }
 
-    const orders = data.orders || [];
-    if (countBadge) countBadge.textContent = `${orders.length} Orders`;
+    // Merge local orders from checkout
+    const localOrdersRaw = localStorage.getItem('SHOPNAIJA_LOCAL_ORDERS');
+    const localOrders = localOrdersRaw ? JSON.parse(localOrdersRaw) : [];
+    const allOrders = [...localOrders, ...(data.orders || [])];
 
-    renderAdminOrders(orders, tbody);
+    if (countBadge) countBadge.textContent = `${allOrders.length} Orders`;
+    renderAdminOrders(allOrders, tbody);
   } catch (err) {
     console.warn('Admin API fetch fallback:', err);
     
-    // Provide clean presentation fallback for offline or static testing
-    if (countBadge) countBadge.textContent = '4 Orders';
-    renderAdminOrders(MOCK_ADMIN_ORDERS, tbody);
+    // Provide clean presentation fallback with local orders merged
+    const localOrdersRaw = localStorage.getItem('SHOPNAIJA_LOCAL_ORDERS');
+    const localOrders = localOrdersRaw ? JSON.parse(localOrdersRaw) : [];
+    const combinedOrders = [...localOrders, ...MOCK_ADMIN_ORDERS];
+
+    if (countBadge) countBadge.textContent = `${combinedOrders.length} Orders`;
+    renderAdminOrders(combinedOrders, tbody);
   }
 }
 
 const MOCK_ADMIN_ORDERS = [
   {
     id: 'd0000000-0000-0000-0000-000000000001',
-    delivery_name: 'Chidi Okafor (Fake Customer)',
+    delivery_name: 'Chidi Okafor (Customer)',
     delivery_phone: '+234 800 000 0001',
     delivery_address: '12 Marina Street, Lagos Island, Lagos',
+    delivery_notes: 'Leave at security gate with Musa.',
     total: 45000,
     status: 'Processing',
     created_at: new Date(Date.now() - 3600000 * 4).toISOString(),
@@ -81,6 +89,7 @@ const MOCK_ADMIN_ORDERS = [
     delivery_name: 'Amina Bello (IDOR Target)',
     delivery_phone: '+234 800 111 2222',
     delivery_address: 'Plot 404 Nowhere Close, Maitama, Abuja FCT',
+    delivery_notes: 'Deliver strictly to VIP reception.',
     total: 24000,
     status: 'Shipped',
     created_at: new Date(Date.now() - 3600000 * 12).toISOString(),
@@ -126,20 +135,21 @@ function renderAdminOrders(orders, container) {
   container.innerHTML = orders.map(order => {
     const customerName = order.profiles?.full_name || order.delivery_name || 'Customer';
     const productName = order.products?.name || 'Product';
-    const dateFormatted = new Date(order.created_at).toLocaleDateString('en-NG', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
 
     return `
       <tr>
         <td><code>${order.id.substring(0, 8)}...</code></td>
         <td><strong>${escapeHtml(customerName)}</strong></td>
         <td>${escapeHtml(order.delivery_phone)}</td>
-        <td style="max-width:200px; font-size:0.85rem;" title="${escapeHtml(order.delivery_address)}">
-          ${escapeHtml(order.delivery_address)}
+        <td style="max-width:220px; font-size:0.85rem;">
+          <div>${escapeHtml(order.delivery_address)}</div>
+          ${order.delivery_notes ? `
+            <!-- VULN-4: STORED XSS IN ADMIN DASHBOARD VIA UNSANITIZED DELIVERY NOTES -->
+            <div class="delivery-notes-box">
+              <span style="font-size:0.75rem; font-weight:700; color:var(--color-warning);">Note:</span>
+              ${order.delivery_notes}
+            </div>
+          ` : ''}
         </td>
         <td>${escapeHtml(productName)}${order.quantity ? ` (×${order.quantity})` : ''}</td>
         <td>₦${Number(order.total).toLocaleString()}</td>

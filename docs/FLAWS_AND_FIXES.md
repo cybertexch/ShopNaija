@@ -91,3 +91,40 @@ The backend route relies on "security through obscurity" (assuming that because 
   2. Validate the JWT using Supabase Auth: `const { data: { user } } = await supabase.auth.getUser(token)`. If invalid, return `401 Unauthorized`.
   3. Query `public.profiles` for `user.id` and confirm `profile.role === 'admin'`. If role is not admin, return `403 Forbidden`.
   4. Only return orders once the caller is cryptographically proven to be an active administrator.
+
+---
+
+## Flaw 4: Stored Cross-Site Scripting (XSS) in Unsanitized Checkout Form Field
+
+### 1. Tag & Location
+* **Tag**: `// VULN-4`
+* **File**: `public/js/admin.js` and `public/js/orders.js`
+* **Vulnerable Code**:
+  ```javascript
+  // In admin.js and orders.js:
+  <div class="delivery-notes-box">
+    ${order.delivery_notes} <!-- VULN-4: Unsanitized innerHTML allows script execution! -->
+  </div>
+  ```
+
+### 2. Why It Is Dangerous
+During checkout, the customer enters "Delivery Instructions & Notes". The application stores this string without sanitization, and when an administrator reviews incoming orders in `/admin/` (or a customer views `order.html`), the frontend injects this value directly into the DOM using unescaped template string interpolation (`innerHTML = ...`). 
+
+If an attacker injects a malicious payload such as:
+```html
+<img src=x onerror="alert('Stored XSS: Session token stolen!')">
+```
+the script executes immediately inside the administrator's browser with the administrator's cookies, local storage, and session permissions.
+
+### 3. Business Impact
+> **Session hijacking, administrator account takeover & customer data exfiltration:** An unprivileged attacker can execute arbitrary JavaScript in the browser of store administrators, silently exfiltrating customer PII (full names, addresses, phone numbers) or hijacking elevated sessions.
+
+### 4. The Fix (FIX-4)
+* **Remediation**:
+  Always HTML-encode/escape user-controlled content before rendering it in the browser DOM, or use safe DOM properties like `textContent`:
+  ```javascript
+  <div class="delivery-notes-box">
+    ${escapeHtml(order.delivery_notes || '')} <!-- FIX-4: Properly escaped -->
+  </div>
+  ```
+

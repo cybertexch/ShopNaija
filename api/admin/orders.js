@@ -50,6 +50,7 @@ export default async function handler(req, res) {
         delivery_name,
         delivery_address,
         delivery_phone,
+        delivery_notes,
         status,
         created_at,
         profiles (
