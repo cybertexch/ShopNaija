@@ -94,7 +94,19 @@ export async function loadMyOrders() {
     orders = FALLBACK_ORDERS.filter(o => o.user_id === user.id || o.user_id === 'c0000000-0000-0000-0000-000000000001');
   }
 
-  renderOrdersTable(orders, container);
+  // Merge locally placed orders so newly placed orders always show up immediately
+  const localOrdersRaw = localStorage.getItem('SHOPNAIJA_LOCAL_ORDERS');
+  const localOrders = localOrdersRaw ? JSON.parse(localOrdersRaw) : [];
+  const relevantLocal = localOrders.filter(o => !user || o.user_id === user.id || o.user_id === 'c0000000-0000-0000-0000-000000000001');
+
+  const combinedOrders = [...relevantLocal];
+  orders.forEach(o => {
+    if (!combinedOrders.some(c => c.id === o.id)) {
+      combinedOrders.push(o);
+    }
+  });
+
+  renderOrdersTable(combinedOrders, container);
 }
 
 function renderOrdersTable(orders, container) {
@@ -211,13 +223,19 @@ export async function loadOrderDetail() {
         fetchError = e;
       }
     }
-  } else {
-    // Instant fallback demo mock (0ms)
-    const localOrders = JSON.parse(localStorage.getItem('SHOPNAIJA_LOCAL_ORDERS') || '[]');
-    order = localOrders.find(o => o.id === orderId) || FALLBACK_ORDERS.find(o => o.id === orderId) || FALLBACK_ORDERS[0];
   }
 
-  if (fetchError || !order) {
+  // Check local orders fallback if not found in Supabase
+  if (!order) {
+    const localOrders = JSON.parse(localStorage.getItem('SHOPNAIJA_LOCAL_ORDERS') || '[]');
+    order = localOrders.find(o => o.id === orderId);
+  }
+
+  if (!order && !isSupabaseConfigured()) {
+    order = FALLBACK_ORDERS.find(o => o.id === orderId) || FALLBACK_ORDERS[0];
+  }
+
+  if (!order) {
     card.innerHTML = `
       <div class="state-box">
         <div class="alert alert-danger" style="display:block;">
@@ -235,13 +253,19 @@ export async function loadOrderDetail() {
 
 function renderOrderDetail(order, currentUser, container) {
   const isOwner = currentUser.id === order.user_id;
-  const productName = order.products?.name || 'Nigerian Heritage Product';
-  const productPrice = order.products?.price || order.total;
-  const productImage = order.products?.image_url || 'images/products/aso-oke.svg';
   const formattedDate = new Date(order.created_at).toLocaleString('en-NG', {
     dateStyle: 'medium',
     timeStyle: 'short'
   });
+
+  const itemsList = (Array.isArray(order.items) && order.items.length > 0)
+    ? order.items
+    : [{
+        name: order.products?.name || 'Handcrafted Nigerian Heritage Product',
+        price: order.products?.price || order.total,
+        quantity: order.quantity || 1,
+        image_url: order.products?.image_url || 'images/products/aso-oke.svg'
+      }];
 
   container.innerHTML = `
     <div class="order-detail-header">
@@ -263,18 +287,26 @@ function renderOrderDetail(order, currentUser, container) {
       </div>
     </div>
 
-    <!-- Product Item -->
+    <!-- Product Items List -->
     <div class="detail-section">
-      <div class="detail-section-title">Purchased Items</div>
-      <div style="display:flex; align-items:center; gap:1rem; padding:1rem; background:var(--color-surface-alt); border-radius:var(--radius-md);">
-        <img src="${escapeHtml(productImage)}" alt="${escapeHtml(productName)}" style="width:70px; height:70px; object-fit:cover; border-radius:var(--radius-sm);" />
-        <div style="flex:1;">
-          <h4 style="font-size:1.05rem; font-weight:700;">${escapeHtml(productName)}</h4>
-          <p style="color:var(--color-text-muted); font-size:0.9rem;">Qty: ${order.quantity} × ₦${Number(productPrice).toLocaleString()}</p>
-        </div>
-        <div style="font-size:1.2rem; font-weight:800; color:var(--color-primary);">
-          ₦${Number(order.total).toLocaleString()}
-        </div>
+      <div class="detail-section-title">Purchased Items (${itemsList.length})</div>
+      <div style="display:flex; flex-direction:column; gap:0.75rem;">
+        ${itemsList.map(item => `
+          <div style="display:flex; align-items:center; gap:1rem; padding:1rem; background:var(--color-surface-alt); border-radius:var(--radius-md); border:1px solid var(--color-border);">
+            <img src="${escapeHtml(item.image_url || 'images/products/aso-oke.svg')}" alt="${escapeHtml(item.name)}" style="width:64px; height:64px; object-fit:cover; border-radius:var(--radius-sm);" onerror="this.src='images/products/aso-oke.svg'" />
+            <div style="flex:1;">
+              <h4 style="font-size:1.05rem; font-weight:700;">${escapeHtml(item.name)}</h4>
+              <p style="color:var(--color-text-muted); font-size:0.9rem;">Qty: ${item.quantity || 1} &times; ₦${Number(item.price).toLocaleString()}</p>
+            </div>
+            <div style="font-size:1.15rem; font-weight:800; color:var(--color-primary);">
+              ₦${(Number(item.price) * (item.quantity || 1)).toLocaleString()}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1rem; padding-top:0.75rem; border-top:1px dashed var(--color-border); font-size:1.15rem; font-weight:800;">
+        <span>Order Grand Total:</span>
+        <span style="color:var(--color-primary);">₦${Number(order.total).toLocaleString()}</span>
       </div>
     </div>
 

@@ -1,6 +1,6 @@
 import { getSupabase, isSupabaseConfigured } from './supabaseClient.js';
 import { initHeaderAuth } from './auth.js';
-import { initCartUI, addToCart, openCart } from './cart.js?v=3';
+import { initCartUI, addToCart, openCart } from './cart.js?v=4';
 
 // Fallback demo products with rich presentation metadata
 const FALLBACK_PRODUCTS = [

@@ -26,8 +26,8 @@ console.warn(
 let supabaseClient = null;
 
 export function isSupabaseConfigured() {
-  const url = localStorage.getItem('SHOPNAIJA_SUPABASE_URL') || window.SUPABASE_URL;
-  const key = localStorage.getItem('SHOPNAIJA_SUPABASE_ANON_KEY') || window.SUPABASE_ANON_KEY;
+  const url = localStorage.getItem('SHOPNAIJA_SUPABASE_URL') || window.SUPABASE_URL || DEFAULT_SUPABASE_URL;
+  const key = localStorage.getItem('SHOPNAIJA_SUPABASE_ANON_KEY') || window.SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
   return Boolean(
     url && 
     key && 
